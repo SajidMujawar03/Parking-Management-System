@@ -1,42 +1,93 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+
+
+.sticky_header{
+    width:100%;
+    height:80px;
+    /* line-height:80px; */
+    position:sticky;
+    top:0;
+    left:0;
+    z-index: 9999;
+    box-shadow: 3px 3px -3px #ddd;
+    background-color: white;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+
+@media only screen and (max-width:768px)
+{
+    .navigation{
+        width:100%;
+        height:100%;
+        position:fixed;
+        top:0;
+        left:0;
+        z-index: 100;
+        background-color: #00000084;
+        display: none;
+    }
+
+    .menu{
+        width:15rem;
+        height:100%;
+        position:absolute;
+        top:0;
+        right:0;
+        background-color: #fff;
+        z-index:200;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        line-height: 30px;
+    }
+
+    .show_menu{
+            display: block;
+    }
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+
+
+
+.contact-us-form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   }
-  to {
-    transform: rotate(360deg);
+  
+  .contact-us-form h2 {
+    text-align: center;
   }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+  
+  .contact-us-form label {
+    display: block;
+    margin-bottom: 10px;
   }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
+  
+  .contact-us-form input,
+  .contact-us-form textarea,
+  .contact-us-form select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+  
+  
+  .contact-us-form button:hover {
+    background-color: rgb(241, 199, 143);
+    color: rgb(251 146 60);
+  }
+  
+  .thank-you-message {
+    text-align: center;
+  }
+  
+  .thank-you-message h2 {
+    color: #28a745;
+  }
+  
