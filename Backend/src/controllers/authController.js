@@ -10,9 +10,62 @@ const generateToken=(user)=>{
 }
 
 export const register=async(req,res)=>{
-    const {eamil,name,password,photo,phone,role}=req.body;
+    const {email,name,password,photo,phone,role}=req.body;
 
     try {
+            
+        email=email.toLowerCase();
+        let user=null;
+        if(role==="user")
+        {
+            user=await User.findOne({email:email});
+        }
+        else if(role==="owner")
+        {
+            user=await Owner.findOne({email:email});
+        }
+      
+
+        if(user)
+        {
+            res.status(400).json({success:false,message:"User Already Exists"})
+        }
+
+        const salt=await bcrypt.genSalt(256);
+        const hashPassword=await bcrypt.hash(password,salt);
+
+        if(role=="user")
+        {
+            user=new User(
+                {
+                email,
+                name,
+                password:hashPassword,
+                photo,
+                phone,
+                role
+            }
+
+            )
+        }
+        else if(role=="owner")
+        {
+            user=new Owner(
+                {
+                email,
+                name,
+                password:hashPassword,
+                photo,
+                phone,
+                role
+            }
+            )
+        }
+
+
+        await user.save();
+
+        res.status(200).json({success:true,message:"Registration successful"})
         
     } catch (error) {
         res.status(500).json({success:false,message:"Internal server error.."})
@@ -23,7 +76,7 @@ export const login=async(req,res)=>{
     const {email,password:Password,role}=req.body;
 
     try {
-        let user;
+        let user=null;
         if(role==='user')
         {
              user=await User.findOne({email:email});
