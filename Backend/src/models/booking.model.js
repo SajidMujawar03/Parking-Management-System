@@ -1,34 +1,42 @@
 import mongoose from "mongoose";
 import { User } from "./user.model";
 import slotModel from "./slot.model";
-
-const BookingSchema=mongoose.Schema({
-    start:{
-        type:Date,
-        required:true
+const bookingSchema = new mongoose.Schema({
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',  // Referencing the User model for the user who books
+        required: true
     },
-    end:{
-        type:Date,
-        required:true
+    slot: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'ParkingSlot',  // Referencing the ParkingSlot model
+        required: true
     },
-    hours:{
-        type:Number,
-        required:true
+    booking_start: {
+        type: Date,
+        required: true
     },
-    totalPrice:{
-        type:Number,
-        required:true
+    booking_end: {
+        type: Date,
+        required: true
     },
-    user:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"User",
-        required:true
+    total_hours: {
+        type: Number,
+        required: true
     },
-    slot:
-    {
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"Slot",
-        required:true
+    total_amount: {
+        type: Number,
+        required: true
+    },
+    booking_status: {
+        type: String,
+        enum: ['confirmed', 'completed', 'cancelled'],
+        default: 'confirmed'
+    },
+    booked_on: {
+        type: Date,
+        default: Date.now
     }
+});
 
-})
+export default Booking=mongoose.model("Booking",bookingSchema);

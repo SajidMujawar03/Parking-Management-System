@@ -7,11 +7,11 @@ const slotSchema=new mongoose.Schema({
             type:String,
             required:true
         },
-        address:{
+        location:{
             type:String,
             required:true
         },
-        price:{
+        hourly_price:{
             type:String,
             required:true
         },
@@ -21,7 +21,15 @@ const slotSchema=new mongoose.Schema({
             ref:"Owner",
             required:true
         },
-
+        status: {
+            type: String,
+            enum: ['available', 'booked'],
+            default: 'available'
+        },
+        added_on: {
+            type: Date,
+            default: Date.now
+        },
         review:[{
             type:mongoose.Schema.Types.ObjectId,
             ref:"Review",
