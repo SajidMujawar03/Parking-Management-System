@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
-import { User } from "./user.model";
-import slotModel from "./slot.model";
+
 const bookingSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,

@@ -36,3 +36,5 @@ const ownerSchema=mongoose.Schema({
 },{
     timestamps:true
 })
+
+export default Owner=mongoose.model("Owner",ownerSchema)
