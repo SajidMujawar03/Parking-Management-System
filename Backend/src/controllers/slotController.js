@@ -1,5 +1,8 @@
 import Slot from '../models/slot.model.js';
 import Owner from '../models/owner.model.js';
+// import Booking from '../models/booking.model.js';
+// import Slot from '../models/slot.model.js';
+// import User from '../models/user.model.js';
 
 export const createSlot = async (req, res) => {
     try {
@@ -25,26 +28,26 @@ export const createSlot = async (req, res) => {
 
 
 // Update an existing parking slot
-export const updateSlot = async (req, res) => {
-    try {
-        const { slotId } = req.params;
-        const { photo, location, hourly_price, status } = req.body;
+// export const updateSlot = async (req, res) => {
+//     try {
+//         const { slotId } = req.params;
+//         const { photo, location, hourly_price, status } = req.body;
 
-        const updatedSlot = await Slot.findByIdAndUpdate(
-            slotId,
-            { photo, location, hourly_price, status },
-            { new: true } // Return the updated document
-        ).populate('owner',"name email photo phone"); // Populate owner details if needed
+//         const updatedSlot = await Slot.findByIdAndUpdate(
+//             slotId,
+//             { photo, location, hourly_price, status },
+//             { new: true } // Return the updated document
+//         ).populate('owner',"name email photo phone"); // Populate owner details if needed
 
-        if (!updatedSlot) {
-            return res.status(404).json({ message: 'Slot not found' });
-        }
+//         if (!updatedSlot) {
+//             return res.status(404).json({ message: 'Slot not found' });
+//         }
 
-        return res.status(200).json({ message: 'Slot updated successfully', slot: updatedSlot });
-    } catch (error) {
-        return res.status(500).json({ message: 'Failed to update slot', error: error.message });
-    }
-};
+//         return res.status(200).json({ message: 'Slot updated successfully', slot: updatedSlot });
+//     } catch (error) {
+//         return res.status(500).json({ message: 'Failed to update slot', error: error.message });
+//     }
+// };
 
 
 
@@ -62,6 +65,7 @@ export const deleteSlot = async (req, res) => {
 
         // Optionally, remove the slot from the owner's slots array
         await Owner.findByIdAndUpdate(deletedSlot.owner, { $pull: { slots: slotId } });
+        
 
         return res.status(200).json({ message: 'Slot deleted successfully' });
     } catch (error) {
