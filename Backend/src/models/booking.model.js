@@ -13,7 +13,8 @@ const bookingSchema = new mongoose.Schema({
     },
     booking_start: {
         type: Date,
-        required: true
+        required: true,
+        default:Date.now
     },
     booking_end: {
         type: Date,
@@ -35,7 +36,18 @@ const bookingSchema = new mongoose.Schema({
     booked_on: {
         type: Date,
         default: Date.now
-    }
+    },
+    payment_method: {
+        type: String,
+        required: true
+    },
+    payment_status: {
+        type: String,
+        enum: ['pending', 'completed', 'failed'],
+        default: 'pending'
+    },
+
 });
 
-export default Booking=mongoose.model("Booking",bookingSchema);
+const Booking=mongoose.model("Booking",bookingSchema);
+export default Booking;

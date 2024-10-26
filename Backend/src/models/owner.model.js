@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+import Slot from "../models/slot.model.js"
+
 
 const ownerSchema=mongoose.Schema({
     email:{
@@ -37,4 +39,17 @@ const ownerSchema=mongoose.Schema({
     timestamps:true
 })
 
-export default Owner=mongoose.model("Owner",ownerSchema)
+
+
+ownerSchema.pre("remove",async function (){
+    try {
+        const id=this._id;
+       Slot.deleteMany({owner:id})
+        next();
+    } catch (error) {
+        next(error)
+    }
+})
+
+const Owner=mongoose.model("Owner",ownerSchema);
+export default Owner;

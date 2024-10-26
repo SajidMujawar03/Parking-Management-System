@@ -24,4 +24,5 @@ const websiteReviewSchema = new mongoose.Schema({
 });
 
 
-export default WebsiteReview=mongoose.model("WebsiteReview",websiteReviewSchema)
+const WebsiteReview=mongoose.model("WebsiteReview",websiteReviewSchema)
+export default WebsiteReview

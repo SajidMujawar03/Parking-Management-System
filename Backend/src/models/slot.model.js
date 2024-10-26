@@ -1,7 +1,5 @@
 import mongoose from "mongoose";
 
-
-
 const slotSchema=new mongoose.Schema({
         photo:{
             type:String,
@@ -39,7 +37,8 @@ const slotSchema=new mongoose.Schema({
     {
         timestamps:true
     }
-)
+);
 
 
-export default Slot=mongoose.model("Slot",slotSchema);
+const Slot=mongoose.model("Slot",slotSchema);
+export default Slot;
