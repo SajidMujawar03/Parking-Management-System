@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { authContext } from "../context/AuthContext";
+import { authContext } from "../context/AuthContext.jsx";
 import { Navigate } from "react-router-dom";
 
 

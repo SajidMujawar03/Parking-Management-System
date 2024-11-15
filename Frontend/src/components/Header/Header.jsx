@@ -1,7 +1,7 @@
 import {useContext, useEffect,useRef} from 'react'
 import { NavLink,Link } from 'react-router-dom'
 
-// import { authContext } from "../../context/AuthContext.jsx"
+import { authContext } from "../../context/AuthContext.jsx"
 
 import logo from "../../assets/logo.png"
 import userImage from "../../assets/userImage.jpg"
@@ -28,7 +28,7 @@ const navLinks=[
 const Header = () => {
   const headerRef=useRef(null);
   const menuRef=useRef(null);
-  // const {user,role,token}=useContext(authContext)
+  const {user,role,token}=useContext(authContext)
 
   
 
@@ -76,20 +76,20 @@ const Header = () => {
               </ul>
            </div>
            <div className="flex items-center gap-4">
-           {/* { token && user ?
+           { token && user ?
            <div className=''>
-              <Link to="/" className='grid grid-cols-2 gap-1 items-center'>
+              <Link to={role==="owner"?'/owner/profile/me' : '/users/profile/me'} className='grid grid-cols-2 gap-1 items-center'>
                   <figure className="w-[35px] rounded-full cursor-pointer">
                       <img src={user?.photo || userImage} alt="userImage" className='w-full rounded-full'/>
                   </figure>
-                  <h2>{user?.name}</h2>
+                  <h2 className='text-gray-700 font-[500]'>{user?.name}</h2>
               </Link>
             </div>
-            : */}
+            :
 
             <Link to="/login">
                 <button className='bg-orange-500 py-2 px-6 font-[600] h-[44px] items-center justify-center rounded-[50px] text-white'>Login</button>
-           </Link>
+           </Link>}
 
             <span className="md:hidden" onClick={toggleMenu}>
               <BiMenu className='w-6 h-6 cursor-pointer'/>

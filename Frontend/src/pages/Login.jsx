@@ -1,18 +1,23 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useContext, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import HashLoader from 'react-spinners/HashLoader'
+import { authContext } from '../context/AuthContext'
+import { toast } from 'react-toastify'
+import { BASE_URL } from '../config.js'
+
 
 const Login = () => {
     //formdata that need to besubmitted to backend for login verification
     const [formData,setFormData]=useState({
         email:'',
         password:'',
-        role:'',
+        role:'user',
       })
     
       const [loading,setLoading]=useState(false)
-      //const {dispatch}=useContext(authContext)
+      const {dispatch}=useContext(authContext)
     
-     // const navigate=useNavigate()
+     const navigate=useNavigate()
     
       const handleInputChange=(e)=>{
           setFormData({
@@ -44,35 +49,35 @@ const Login = () => {
             }
           )
     
-          //const result=await res.json()
+          const result=await res.json()
           
      
           // console.log(res.ok)
-        //   if(!res.ok)
-        //   {
+          if(!res.ok)
+          {
            
-        //     throw new Error(result.message || "something went wrong")
-        //   }
+            throw new Error(result.message || "something went wrong")
+          }
     
             // console.log("hi")
-        //   dispatch({
-        //     type:"LOGIN_SUCCESS",
-        //     payload:{
-        //       user:result.data,
-        //       role:result.role,
-        //       token:result.token
-        //     }
-        //   })
+          dispatch({
+            type:"LOGIN_SUCCESS",
+            payload:{
+              user:result.data,
+              role:result.data.role,
+              token:result.token
+            }
+          })
     
      
           setLoading(false)
-          //toast.success(result.message)
+          toast.success(result.message)
     
-          //navigate('/')
+          navigate('/')
           
         } catch (error) {
           
-          //toast.error(err.message)
+          toast.error(error.message)
     
           setLoading(false)
         }
@@ -99,11 +104,11 @@ const Login = () => {
                             <p className='text-[18px] font-semibold'>Login As ? </p>
                             <div className='flex flex-row gap-3'> 
                             <div>
-                                <input type="radio" id='user' name='role' value='user'  onChange={handleInputChange} />
+                                <input type="radio" id='user' name='role' value='user' checked={formData.role === 'user'} onChange={handleInputChange} />
                                 <label htmlFor="user">User</label>
                             </div>
                             <div>
-                                <input type="radio" id='owner' name='role' value='owner'  onChange={handleInputChange}/>
+                                <input type="radio" id='owner' name='role' value='owner' checked={formData.role === 'owner'}  onChange={handleInputChange}/>
                                 <label htmlFor="owner">Owner</label>
                             </div>
                             </div>
