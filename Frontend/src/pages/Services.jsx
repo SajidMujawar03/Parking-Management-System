@@ -34,6 +34,14 @@ const Services = () => {
         // Add search logic here if needed
     };
 
+    // Handler to open Google Maps with the slot's latitude and longitude
+    const handleOpenMaps = (latitude, longitude) => {
+        if (latitude && longitude) {
+            const url = `https://www.google.com/maps/place/${latitude},${longitude}`;
+            window.open(url, '_blank');
+        }
+    };
+
     return (
         <>
             <section className='h-[80vh]'>
@@ -75,7 +83,11 @@ const Services = () => {
                                                 </div>
                                             </div>
 
-                                            <FaLocationDot className='text-[30px] text-red-700 absolute right-0 top-0' />
+                                            <FaLocationDot
+                                                className='text-[30px] text-red-700 absolute right-0 top-0 cursor-pointer'
+                                                onClick={() => handleOpenMaps(slot.latitude, slot.longitude)}
+                                                title="Open location in Google Maps"
+                                            />
 
                                             <Link to={`/booking/${slot._id}`} className='absolute bottom-0 right-0 bg-blue-400 h-[40px] w-[75px] rounded-full text-white font-bold text-center'>
                                                 BOOK
