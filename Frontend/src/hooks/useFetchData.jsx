@@ -32,6 +32,8 @@ useEffect(()=>{
             throw new Error(result.message + "😠")
         }
 
+        console.log(result.data)
+
         setData(result.data)
         setLoading(false)
        

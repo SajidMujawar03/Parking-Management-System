@@ -8,7 +8,7 @@ const bookingSchema = new mongoose.Schema({
     },
     slot: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'ParkingSlot',  // Referencing the ParkingSlot model
+        ref: 'Slot',  // Referencing the ParkingSlot model
         required: true
     },
     booking_start: {

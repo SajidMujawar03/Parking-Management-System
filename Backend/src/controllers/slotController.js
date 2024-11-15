@@ -8,7 +8,7 @@ export const createSlot = async (req, res) => {
     try {
         const { photo, address, hourly_price, owner,coordinates: { latitude, longitude } } = req.body;
 
-        console.log(req.body)
+        // console.log(req.body)
         const newSlot = new Slot({
             photo,
             hourly_price,
@@ -30,7 +30,7 @@ export const createSlot = async (req, res) => {
 
         return res.status(201).json({ message: 'Slot created successfully', slot: newSlot });
     } catch (error) {
-        console.log(error.message)
+        // console.log(error.message)
         return res.status(500).json({ message: 'Failed to create slot', error: error.message });
     }
 };
@@ -93,7 +93,7 @@ export const getSlot=async(req,res)=>{
         if(slot==null)
             res.status(404).json({success:false,message:"Slot Not Found"});
 
-        console.log(slot)
+        // console.log(slot)
         res.status(200).json({success:true,message:"Slot Found",data:slot});
 
     } catch (error) {

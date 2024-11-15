@@ -2,6 +2,7 @@ import express  from "express"
 import { deleteProfile, getAllUsers, getProfile, getUser, updateProfile } from "../controllers/usercontroller.js";
 import { getSlots } from "../controllers/usercontroller.js";
 import { verifyToken,authorizeRoles } from "../auth/verifyToken.js";
+import { getBookings } from "../controllers/bookingController.js";
 
 
 const router=express.Router();
@@ -16,9 +17,9 @@ router.get('/profile/me',verifyToken, authorizeRoles('user'),getProfile);
 router.get('/:id',getUser);
 router.put("/:id",updateProfile);
 router.delete("/:id",verifyToken, authorizeRoles('user'),deleteProfile);
-router.get("/bookings/my-booking",verifyToken, authorizeRoles('user'),getSlots);
+router.get("/my-booking",verifyToken, authorizeRoles('user'),getSlots);
 router.get("/",getAllUsers);
-
+router.get("/bookings/:userId",getBookings)
 
 
 export default router;
