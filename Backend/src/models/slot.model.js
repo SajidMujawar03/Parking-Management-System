@@ -5,7 +5,7 @@ const slotSchema=new mongoose.Schema({
             type:String,
             required:true
         },
-        location:{
+        address:{
             type:String,
             required:true
         },
@@ -13,6 +13,16 @@ const slotSchema=new mongoose.Schema({
             type:String,
             required:true
         },
+        longitude:{
+                type:String,
+                required:true
+            },
+        latitude:
+            {
+                type:String,
+                required:true
+            }
+        ,
        
         owner:{
             type:mongoose.Schema.Types.ObjectId,

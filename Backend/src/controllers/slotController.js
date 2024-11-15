@@ -6,21 +6,31 @@ import Owner from '../models/owner.model.js';
 
 export const createSlot = async (req, res) => {
     try {
-        const { photo, location, hourly_price, owner } = req.body;
+        const { photo, address, hourly_price, owner,coordinates: { latitude, longitude } } = req.body;
 
+        console.log(req.body)
         const newSlot = new Slot({
             photo,
-            location,
             hourly_price,
+            longitude,
+            latitude,
+            address,
             owner,
         });
+        const user=await Owner.findById(owner);
+        if(!user)
+        {
+            return res.status(404).json({ message: 'user not found' });
+        }
 
         await newSlot.save();
+
         // Optionally, update the owner's slots array
         await Owner.findByIdAndUpdate(owner, { $push: { slots: newSlot._id } });
 
         return res.status(201).json({ message: 'Slot created successfully', slot: newSlot });
     } catch (error) {
+        console.log(error.message)
         return res.status(500).json({ message: 'Failed to create slot', error: error.message });
     }
 };
@@ -54,7 +64,7 @@ export const createSlot = async (req, res) => {
 // Delete a parking slot
 export const deleteSlot = async (req, res) => {
     try {
-        const { slotId } = req.params;
+        const  slotId  = req.params.id;
 
         // First, find and delete the slot
         const deletedSlot = await Slot.findByIdAndDelete(slotId);
@@ -72,3 +82,35 @@ export const deleteSlot = async (req, res) => {
         return res.status(500).json({ message: 'Failed to delete slot', error: error.message });
     }
 };
+
+
+export const getSlot=async(req,res)=>{
+    const id=req.params.id;
+    try {
+
+        // console.log(id)
+        const slot=await Slot.findById(id);
+        if(slot==null)
+            res.status(404).json({success:false,message:"Slot Not Found"});
+
+        console.log(slot)
+        res.status(200).json({success:true,message:"Slot Found",data:slot});
+
+    } catch (error) {
+        
+    }
+}
+
+
+export const getAllSlots = async (req, res) => {
+    try {
+        const slots = await Slot.find({}).populate('owner', 'name phone') ; 
+
+
+        return res.status(200).json({slots}); 
+    } catch (error) {
+        return res.status(500).json({ message: 'Failed to fetch slots', error: error.message });
+    }
+};
+
+

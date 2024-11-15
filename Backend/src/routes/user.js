@@ -7,13 +7,16 @@ import { verifyToken,authorizeRoles } from "../auth/verifyToken.js";
 const router=express.Router();
 
 // authorization
-// router.get('/user-profile-me',verifyToken, authorizeRoles('user'),getProfile);
+router.get('/profile/me',verifyToken, authorizeRoles('user'),getProfile);
 
-router.get('/user-profile-me',getProfile);
+//only this is remaining
+// router.get('/user/profile/me',getProfile);
+
+//completed
 router.get('/:id',getUser);
 router.put("/:id",updateProfile);
-router.delete("/:id",deleteProfile);
-router.get("/booked-slots/:id",getSlots);
+router.delete("/:id",verifyToken, authorizeRoles('user'),deleteProfile);
+router.get("/bookings/my-booking",verifyToken, authorizeRoles('user'),getSlots);
 router.get("/",getAllUsers);
 
 

@@ -9,8 +9,9 @@ dotenv.config();
 
 import auth from './src/routes/auth.js'
 import user from "./src/routes/user.js"
-
-
+import owner from './src/routes/owner.js'
+import slot from "./src/routes/slots.js"
+import booking from './src/routes/booking.js'
 const app=express();
 
 const port=process.env.PORT ;
@@ -34,6 +35,9 @@ app.use(express.urlencoded({extended: true}));
 app.use(cors(corsOptions))
 app.use("/api/v1/auth",auth);
 app.use("/api/v1/user",user);
+app.use("/api/v1/owner",owner);
+app.use("/api/v1/slot",slot);
+app.use('/api/v1/bookings',booking)
 
 
 const connectDB = async () => {

@@ -1,3 +1,5 @@
+//completed
+
 import Owner from "../models/owner.model.js";
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
@@ -11,8 +13,10 @@ export const register = async (req, res) => {
     const { email, name, password, photo, phone, role } = req.body;
 
     try {
+        
         const lowerCaseEmail = email.toLowerCase();
         let user = null;
+       
        
         if (role === "user") {
             user = await User.findOne({ email: lowerCaseEmail });
@@ -24,9 +28,11 @@ export const register = async (req, res) => {
             return res.status(200).json({ success: false, message: "Invalid role" });
         }
 
+        console.log(user);
+
 
         if (user!=null) {
-            return res.status(400).json({ success: false, message: "User Already Exists" ,data:user.role});
+            return res.status(409).json({ success: false, message: "User Already Exists"});
         }
 
         const salt = await bcrypt.genSalt(10);
@@ -75,7 +81,6 @@ export const login = async (req, res) => {
 
         const token = generateToken(user);
         const { password, slots, ...rest } = user.toObject(); // Convert Mongoose Document to Object
-
         res.status(200).json({ success: true, message: "Successfully logged in", data: { ...rest }, token });
 
     } catch (error) {
