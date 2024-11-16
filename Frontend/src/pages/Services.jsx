@@ -1,12 +1,26 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { FaSearch } from "react-icons/fa";
 import { BASE_URL } from '../config';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaLocationDot } from "react-icons/fa6";
+import Fuse from 'fuse.js';
+import { authContext } from '../context/AuthContext'
+import { toast } from 'react-toastify';
+
+
 
 const Services = () => {
     const [slots, setSlots] = useState([]);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [filteredSlots, setFilteredSlots] = useState([]);
+    const [priceRange, setPriceRange] = useState([0, 1000]); // Price range filter
+    const [ownerFilter, setOwnerFilter] = useState('');
+    
+    const {user}=useContext(authContext)
 
+    const navigate=useNavigate()
+
+    // Fetch slots from the API
     const fetchSlots = async () => {
         try {
             const response = await fetch(`${BASE_URL}/slot/slots`, {
@@ -20,6 +34,7 @@ const Services = () => {
                 throw new Error(`Error: ${response.status} ${response.statusText}`);
             }
             setSlots(data.slots);
+            setFilteredSlots(data.slots);  // Initially show all slots
         } catch (error) {
             console.error("Error fetching slots:", error);
         }
@@ -29,9 +44,49 @@ const Services = () => {
         fetchSlots();
     }, []);
 
+    // Handle the search input change
+    const handleSearchInput = (e) => {
+        setSearchQuery(e.target.value);
+    };
+
+    // Handle price range filter change
+    const handlePriceChange = (e) => {
+        const [min, max] = e.target.value.split('-');
+        setPriceRange([parseInt(min), parseInt(max)]);
+    };
+
+    // Handle owner name filter
+    const handleOwnerFilter = (e) => {
+        setOwnerFilter(e.target.value);
+    };
+
+    // Perform complex filtering with Fuse.js
     const handleSearch = (e) => {
         e.preventDefault();
-        // Add search logic here if needed
+
+        let filtered = slots;
+
+        // Apply Fuse.js for fuzzy search
+        if (searchQuery) {
+            const fuse = new Fuse(filtered, {
+                keys: ['address', 'owner.name'], // Search in address and owner name
+                includeScore: true,
+                threshold: 0.4, // Threshold for fuzzy match (lower = more strict)
+            });
+            filtered = fuse.search(searchQuery).map(result => result.item); // Get matched slots
+        }
+
+        // Filter by price range
+        if (priceRange) {
+            filtered = filtered.filter(slot => slot.hourly_price >= priceRange[0] && slot.hourly_price <= priceRange[1]);
+        }
+
+        // Filter by owner name
+        if (ownerFilter) {
+            filtered = filtered.filter(slot => slot.owner.name.toLowerCase().includes(ownerFilter.toLowerCase()));
+        }
+
+        setFilteredSlots(filtered);
     };
 
     // Handler to open Google Maps with the slot's latitude and longitude
@@ -42,23 +97,56 @@ const Services = () => {
         }
     };
 
+    const toastMessage=(slot)=>{
+            user.role==='user'?toast.success(`Hi ${user.name}!!`):toast.error("Only Users can Book")
+            user.role==='user'?navigate(`/booking/${slot._id}`):navigate('/login')
+    }
+
     return (
         <>
-            <section className='h-[80vh]'>
+            <section className='h-fit'>
                 <form onSubmit={handleSearch} className='container flex items-center justify-center'>
                     <div className='shadow-custom-shadow w-[60%] rounded-full flex'>
-                        <input type="text" className='w-3/4 h-[50px] rounded-l-full px-[20px] focus:outline-none' />
-                        <button type="submit" className='bg-orange-400 w-1/4 rounded-r-full font-bold text-white text-[18px] flex items-center justify-center gap-1'>
+                        <input
+                            type="text"
+                            value={searchQuery}
+                            onChange={handleSearchInput}
+                            className='w-3/4 h-[50px] rounded-l-full px-[20px] focus:outline-none'
+                            placeholder="Search by address or owner"
+                        />
+                        <button
+                            type="submit"
+                            className='bg-orange-400 w-1/4 rounded-r-full font-bold text-white text-[18px] flex items-center justify-center gap-1'
+                        >
                             <FaSearch />
                             <span>Search</span>
                         </button>
                     </div>
                 </form>
 
+                <div className="mt-8 container flex justify-center gap-5">
+                    {/* Price Range Filter */}
+                    <select onChange={handlePriceChange} className="border p-2 rounded">
+                        <option value="0-1000">Price: All</option>
+                        <option value="0-200">Price: 0-200</option>
+                        <option value="200-400">Price: 200-400</option>
+                        <option value="400-1000">Price: 400-1000</option>
+                    </select>
+
+                    {/* Owner Filter */}
+                    <input
+                        type="text"
+                        value={ownerFilter}
+                        onChange={handleOwnerFilter}
+                        placeholder="Filter by owner"
+                        className="border p-2 rounded"
+                    />
+                </div>
+
                 <div className="container mt-8 flex justify-center">
-                    {slots.length > 0 ? (
+                    {filteredSlots.length > 0 ? (
                         <ul className='w-[75%] h-fit grid grid-cols-1 place-items-center'>
-                            {slots.map((slot, index) => (
+                            {filteredSlots.map((slot, index) => (
                                 <li key={index} className="p-2 shadow-lg mb-4 rounded-lg w-3/4 h-fit relative">
                                     <div className="p-2 flex items-center justify-start border-solid border-orange-200">
                                         <div className='flex gap-3 w-full relative'>
@@ -89,16 +177,16 @@ const Services = () => {
                                                 title="Open location in Google Maps"
                                             />
 
-                                            <Link to={`/booking/${slot._id}`} className='absolute bottom-0 right-0 bg-blue-400 h-[40px] w-[75px] rounded-full text-white font-bold text-center'>
+                                            <button className='absolute bottom-0 right-0 bg-blue-400 h-[40px] w-[75px] rounded-full text-white font-bold text-center flex items-center justify-center' onClick={()=>toastMessage(slot)}>
                                                 BOOK
-                                            </Link>
+                                            </button>
                                         </div>
                                     </div>
                                 </li>
                             ))}
                         </ul>
                     ) : (
-                        <p>No slots available.</p>
+                        <p>No slots found matching your search.</p>
                     )}
                 </div>
             </section>

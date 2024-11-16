@@ -29,6 +29,8 @@ export const createOrder= async (req, res) => {
             payment_capture: 1,  // Automatically capture the payment
         };
 
+        console.log(amountInPaise,amount)
+
         const order = await razorpayInstance.orders.create(options);
 
         if (!order) {
@@ -74,7 +76,7 @@ export const verifyPayment= async (req, res) => {
             res.status(400).json({ success: false, message: 'Payment verification failed' });
         }
     } catch (error) {
-        console.error('Error verifying payment:', error);
+        // console.error('Error verifying payment:', error);
         res.status(500).json({ message: 'Server error while verifying payment' });
     }
 };

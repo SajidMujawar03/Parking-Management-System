@@ -52,16 +52,20 @@ export const checkAvailability = async (req, res) => {
             const bookingStart = new Date(booking.booking_start);
             const bookingEnd = new Date(booking.booking_end);
 
+            console.log(bookingStart ,"   ",new Date(fromDate))
+            console.log(bookingEnd ,"   ",new Date(toDate))
+
+
             return (new Date(fromDate) >= bookingEnd || new Date(toDate) <= bookingStart);
         });
 
         if (isAvailable) {
             return res.json({ isAvailable: true });
         } else {
-            return res.status(400).json({ isAvailable: false, message: "Slot is not available." });
+            return res.status(404).json({ isAvailable: false, message: "Slot is not available." });
         }
     } catch (error) {
-        console.error("Error checking availability:", error);
+        // console.error("Error checking availability:", error);
         return res.status(500).json({ message: "Internal server error" });
     }
 };
@@ -106,7 +110,7 @@ export const bookSlot= async (req, res) => {
         });
         res.json({ success: true, message: 'Slot booked successfully' });
     } catch (error) {
-        console.error('Error booking slot:', error);
+        // console.error('Error booking slot:', error);
         res.status(500).json({ message: 'Server error while booking slot' });
     }
 };
@@ -118,14 +122,14 @@ export const getBookings=async(req,res)=>{
         
         const bookings=await Booking.find({user:userId}).populate('slot');
         
-        console.log("hi")
-        console.log(bookings)
+        // console.log("hi")
+        // console.log(bookings)
         if(!bookings)
             res.status(404).json({success:false,message:"No slots available"});
         
         res.status(200).json({success:true,message:"got slots",bookings})
     } catch (error) {
-        console.log(error.message)
+        // console.log(error.message)
         res.status(500).json({success:false,message:"Internal error"})
     }
 }

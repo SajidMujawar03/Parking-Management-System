@@ -33,7 +33,7 @@ export const updateProfile=async (req,res)=>{
 export const deleteProfile = async (req, res) => {
     try {
         const id = req.user.id;
-        console.log(id)
+        // console.log(id)
         const user = await await User.findByIdAndDelete(id);
         
         // if (!user) {
@@ -45,16 +45,16 @@ export const deleteProfile = async (req, res) => {
         
         res.status(200).json({ success:true,message: "User profile deleted successfully" });
     } catch (error) {
-        console.error("Error deleting user profile:", error.message);
+        // console.error("Error deleting user profile:", error.message);
         res.status(500).json({success:false, message: "Error deleting user profile", error: error.message });
     }
 };
 
 export const getAllUsers=async(req,res)=>{
-            console.log("hi")
+            // console.log("hi")
     
         try {
-            console.log("hi");
+            // console.log("hi");
             const users=await User.find({}).select("-password -slots");
             
             res.status(200).json({success:true,message:"User Data sending....",data:users})

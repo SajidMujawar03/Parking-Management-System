@@ -14,9 +14,9 @@ const MyBookings = () => {
       try {
         const response = await fetch(`${BASE_URL}/user/bookings/${user._id}`);
         const data = await response.json();
-        const slot=data.bookings;
-        
-        console.log(slot)
+        const slot = data.bookings;
+
+        console.log(slot);
         // Check for empty data or unexpected response format
         if (Array.isArray(slot)) {
           setSlots(slot);
@@ -37,43 +37,94 @@ const MyBookings = () => {
     }
   }, [user._id]);
 
-  // if (loading) {
-  //   return <Loading />;
-  // }
+  // Check if the booking is active or expired
+  const checkBookingStatus = (startTime,endTime) => {
+    const currentTime = new Date();
+    const bookingEndTime = new Date(endTime);
+    const bookingStartTime=new Date(startTime);
+    return currentTime < bookingEndTime ? (currentTime>bookingStartTime?'active':'arriving') : 'expired';
+  };
 
-  // if (error) {
-  //   return <Error message={error} />;
-  // }
+  const getDate = (date) => {
+    const data = new Date(date);
+    return data.toLocaleString();
+  };
+
+  // Calculate time remaining for active bookings
+  const getRemainingTime = (endTime) => {
+    const currentTime = new Date();
+    const bookingEndTime = new Date(endTime);
+    const remainingTimeInMs = bookingEndTime - currentTime;
+
+    if (remainingTimeInMs <= 0) {
+      return 'Expired';
+    }
+
+    const remainingHours = Math.floor(remainingTimeInMs / (1000 * 60 * 60));
+    const remainingMinutes = Math.floor((remainingTimeInMs % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor(remainingTimeInMs / 1000)%60;
+
+    return `${remainingHours} hrs ${remainingMinutes} mins ${seconds}`;
+  };
+
+  // Set an interval to update the remaining time every second
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSlots((prevSlots) => [...prevSlots]);
+    }, 1000); // Update every second
+
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, []);
 
   return (
     <div>
       {slots.length > 0 ? (
-        slots.map((slot) => (
-          <div key={slot._id} className="w-[100%]">
-             <>
-        <div className="p-2 flex items-center justify-start border-solid border-orange-200">
-            <div className='grid grid-cols-2 gap-5 w-full'>
-            <div className='w-[275px] h-[100%]'>
-                <img src={slot.slot.photo} className='w-[275px] h-[200px] rounded-[20px]' alt="" />
-            </div>
+        slots.map((slot) => {
+          const status = checkBookingStatus(slot.booking_start,slot.booking_end); // Assuming `end_time` exists in your data
+          const startDate = getDate(slot.booking_start);
+          const endDate = getDate(slot.booking_end);
+          const remainingTime = status === 'active' ? getRemainingTime(slot.booking_end) : 'Expired';
 
-            <div>
-            <p className='text-[18px]  lg:text-[26px]  text-slate-800 font-700'>
-                Paid Amount : Rs.{slot.total_amount}
-            </p>
-            <p>
-                Address: {slot.slot.address}
-            </p>
-            </div>
-        </div>
+          return (
+            <div
+              key={slot._id}
+              className={`w-[100%] relative ${status === 'active' ? 'bg-green-100' :(status==="expired" ? 'bg-red-100':"bg-blue-100")} mt-2 rounded-md`}
+            >
+              <div className="p-2 flex items-center justify-start border-solid border-orange-200">
+                <div className="grid grid-cols-2 gap-5 w-full">
+                  <div className="w-[275px] h-[100%]">
+                    <img
+                      src={slot.slot.photo}
+                      className="w-[275px] h-[200px] rounded-[20px]"
+                      alt=""
+                    />
+                  </div>
 
-        </div>
-    </>
-          </div>
-        ))
+                  <div>
+                    <p className="text-[18px] lg:text-[26px] text-slate-800 font-700">
+                      Paid Amount: Rs.{slot.total_amount}
+                    </p>
+
+                    <pre>Started At : {startDate}</pre>
+                    <pre>Ends At    : {endDate}</pre>
+                    <p>Address: {slot.slot.address}</p>
+                    {status === 'active' && (
+                      <p className="font-semibold text-blue-600">
+                        Remaining Time: {remainingTime}
+                      </p>
+                    )}
+                    <p className={`font-semibold ${status === 'active' ? 'text-green-600' : (status==="expired" ? 'text-red-600':"text-blue-600")}`}>
+                      {status === 'active' ? 'Active Booking' :(status==="expired" ? 'Expired Booking':"Arriving Booking")}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })
       ) : (
         <h3 className="mt-5 text-center text-orange-500 leading-7 text-[20px] font-semibold">
-          You have not created any slot
+          You have not Booked any Slot!!!
         </h3>
       )}
     </div>

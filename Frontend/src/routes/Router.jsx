@@ -20,8 +20,8 @@ const Router = () => {
          <Route path="/login" element={<Login/>}/>
          <Route path="/users/profile/me" element={<ProtectedRoute allowedRoles={["user"]}> <MyAccount/></ProtectedRoute>  }/>
          <Route path="/owner/profile/me" element={<ProtectedRoute allowedRoles={["owner"]}> <DashBoard/></ProtectedRoute>}/>
-         <Route path="/booking/:slotId" element={<ProtectedRoute allowedRoles={["owner","user"]} > <BookingPage/></ProtectedRoute>}/> 
-         <Route path="/confirmation" element={<ProtectedRoute allowedRoles={["owner","user"]} > <ConfirmationPage/></ProtectedRoute>}/> 
+         <Route path="/booking/:slotId" element={<ProtectedRoute allowedRoles={["user"]} > <BookingPage/></ProtectedRoute>}/> 
+         <Route path="/confirmation" element={<ProtectedRoute allowedRoles={["user"]} > <ConfirmationPage/></ProtectedRoute>}/> 
          <Route path="/register" element={<Signup/>}/> 
          <Route path="/service" element={<Services/>}/>
          <Route path="/contact" element={<Contact/>}/>

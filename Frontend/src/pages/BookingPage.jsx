@@ -17,6 +17,7 @@ const BookingPage = () => {
     const {user}=useContext(authContext);
     const { slotId } = useParams();
     const navigate = useNavigate();
+    const [amount,setAmount]=useState(0);
     const [slot, setSlot] = useState(null);
     const [bookingData,setBookingData]=useState(null);
     const [fromDate, setFromDate] = useState(() => {
@@ -103,6 +104,24 @@ const BookingPage = () => {
         fetchBookingDetails();
     }, [slotId]);
 
+    useEffect(() => {
+        if (slot) {
+            const calculateAmount = () => {
+                const fromDateTime = new Date(`${fromDate}T${fromTime}`);
+                const toDateTime = new Date(`${toDate}T${toTime}`);
+                const totalHours = (toDateTime - fromDateTime) / (1000 * 60 * 60); // Convert milliseconds to hours
+
+                if (totalHours > 0) {
+                    setAmount((totalHours * slot.hourly_price).toFixed(2));
+                } else {
+                    setAmount(0); // Reset if invalid range
+                }
+            };
+
+            calculateAmount();
+        }
+    }, [fromDate, fromTime, toDate, toTime, slot]);
+
     const handlePayment = async () => {
         try {
             // Prepare the selected time range
@@ -142,9 +161,9 @@ const BookingPage = () => {
             });
 
             
-
             if (!availabilityResponse.ok) {
-                throw new Error(`Error: ${availabilityResponse.status}`);
+                const avail=await availabilityResponse.json();
+                throw new Error(`${avail.message}`);
             }
     
             const availabilityData = await availabilityResponse.json();
@@ -153,7 +172,7 @@ const BookingPage = () => {
             }
 
             const totalHours=(selectedToDate-selectedFromDate)/(1.0*1000*60*60);
-            const totalAmout=totalHours*slot.hourly_price;
+            const totalAmout=(totalHours*slot.hourly_price).toFixed(2);
     
             // Step 2: Create Razorpay order if the slot is available
             const response = await fetch(`${BASE_URL}/bookings/create-order`, {
@@ -229,7 +248,7 @@ const BookingPage = () => {
 
                             }),
                         });
-                        navigate('/confirmation');  // Navigate to confirmation page
+                        // navigate('/confirmation');  // Navigate to confirmation page
                     } else {
                         setPaymentStatus('Payment verification failed!');
                     }
@@ -240,7 +259,7 @@ const BookingPage = () => {
                     contact: '1234567890',
                 },
                 theme: {
-                    color: '#3399cc',
+                    color: '#FFA500',
                 },
             };
     
@@ -295,6 +314,9 @@ const BookingPage = () => {
                 </div>
                 <div className="mb-4 flex items-center">
                     <FaMoneyBillAlt className='mr-2'/> Price: Rs. {slot.hourly_price} per hour
+                </div>
+                <div>
+                    <p>Total Amount : {amount}</p>
                 </div>
                 <button onClick={handlePayment} className="bg-blue-500 text-white py-2 px-4 rounded-full">
                     Pay and Book

@@ -11,7 +11,7 @@ function App() {
     <>
       <Layout />
       {/* Render LocationFinder globally here */}
-      <LocationFinder />
+      {/* <LocationFinder /> */}
     </>
   );
 }
