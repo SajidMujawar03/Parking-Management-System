@@ -214,8 +214,6 @@
 
 
 
-
-
 import React, { useContext, useEffect, useState } from 'react';
 import { useGeolocated } from "react-geolocated";
 import useFetchData from '../../hooks/useFetchData.jsx';
@@ -238,7 +236,6 @@ const MyBookings = () => {
   const [location, setLocation] = useState(null);
   const [err, setErr] = useState(null);
 
-  // Fetch existing slots
   const { data: slots, loading, error, refetch } = useFetchData(`${BASE_URL}/owner/created-slots/${user._id}`);
 
   const { coords, isGeolocationAvailable, isGeolocationEnabled } = useGeolocated({
@@ -266,8 +263,13 @@ const MyBookings = () => {
     photo: '',
     hourly_price: '',
     address: '',
+    city: '',
+    taluka: '',
+    district: '',
+    pincode: '',
     coordinates: { latitude: '', longitude: '' },
     owner: user._id,
+    expiry_date: '',
   });
 
   useEffect(() => {
@@ -299,17 +301,21 @@ const MyBookings = () => {
     e.preventDefault();
     setIsCreating(true);
 
-    // Check that latitude and longitude are not empty or invalid
-    if (!newSlot.coordinates.latitude || !newSlot.coordinates.longitude) {
-      setErr("Location is not valid.");
-      setIsCreating(false);
-      return;
-    }
-
     try {
       if (isNaN(parseFloat(newSlot.hourly_price))) {
         throw new Error("Price should be a number");
       }
+
+      if (!newSlot.expiry_date) {
+        throw new Error("Expiry date is required.");
+      }
+
+      // Combine all address fields
+      const fullAddress = `${newSlot.address}, ${newSlot.city}, ${newSlot.taluka}, ${newSlot.district}, ${newSlot.pincode}`;
+      const slotData = {
+        ...newSlot,
+        address: fullAddress,
+      };
 
       const response = await fetch(`${BASE_URL}/slot/create-slot`, {
         method: 'POST',
@@ -317,25 +323,24 @@ const MyBookings = () => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(newSlot),
+        body: JSON.stringify(slotData),
       });
 
       const result = await response.json();
 
       if (response.ok) {
-        // Reset the form but keep the coordinates intact
         setPreviewURL('');
         setNewSlot({
           photo: '',
           hourly_price: '',
           address: '',
-          coordinates: newSlot.coordinates, // Preserve coordinates
+          
+          coordinates: newSlot.coordinates,
           owner: user._id,
+          expiry_date: '',
         });
 
         toast.success("Slot created successfully!");
-
-        // Refetch slots
         refetch();
       } else {
         throw new Error(result.message || 'Failed to create slot');
@@ -354,22 +359,10 @@ const MyBookings = () => {
       {error && !loading && <Error errorMessage={error} />}
       {!loading && !error && (
         <div>
-          <div className="p-2 bg-[#ffffff] border-b-red-700">
-            <p className="flex justify-center items-center text-[#ff3030] font-500 text-[18px]">
-              <FaCircleExclamation className="inline mr-1 text-red-500" />
-              Your Current Location Coordinates will be set for the navigation to the parking
-            </p>
-          </div>
-
-          {err && (
-            <div className="p-2 text-red-500 font-semibold">
-              <p>{err}</p>
-            </div>
-          )}
-
           <form onSubmit={handleAddSlot} className="rounded-md border border-orange-100">
-            <div className="flex items-center justify-between m-2 flex-wrap">
-              <div className="flex items-center gap-3 flex-1 min-w-[calc(50%-8px)] m-2">
+            <div className="flex items-center justify-between m-2 flex-wrap ">
+              <div className="flex items-center gap-3 flex-1 min-w-[calc(50%-8px)] m-2 justify-between">
+                <div>
                 {selectedFile && (
                   <figure className="w-[60px] h-[60px] rounded-full border-2 border-solid border-orange-500 flex items-center justify-center">
                     <img src={previewURL} alt="Preview" className="w-full rounded-full" />
@@ -392,37 +385,91 @@ const MyBookings = () => {
                     required
                   />
                 </div>
-              </div>
-              <input
-                type="text"
-                name="hourly_price"
-                value={newSlot.hourly_price}
+                </div>
+
+                <input
+                type="datetime-local"
+                name="expiry_date"
+                value={newSlot.expiry_date}
                 onChange={handleInputChange}
-                placeholder="Enter Hourly Price in Rupees"
                 required
-                className="flex-1 min-w-[calc(50%-8px)] m-2 p-1 focus:outline-none border-solid border-b border-orange-400"
+                className=" m-2 p-2 focus:outline-none border-solid border-b border-orange-400"
               />
+              </div>
+
+
+
+             
               <input
                 type="text"
                 name="address"
                 value={newSlot.address}
                 onChange={handleInputChange}
-                placeholder="Detailed Address"
+                placeholder="Street Address"
                 required
                 className="h-[50px] w-[100%] text-start p-1 m-2 focus:outline-none border-solid border-b border-orange-400"
               />
-              <div className="w-[100%]">
-                <button
-                  type="submit"
-                  disabled={isCreating}
-                  className="m-2 bg-green-300 w-fit flex items-center justify-between p-2 font-[600] rounded-md text-green-900"
-                >
-                  <IoIosAddCircleOutline />
-                  Add Slot
-                </button>
-              </div>
+               <div className='grid md:grid-cols-2 grid-cols-1 w-full gap-2'>
+              <input
+                type="text"
+                name="city"
+                value={newSlot.city}
+                onChange={handleInputChange}
+                placeholder="City"
+                required
+                className="h-[50px] text-start p-1 m-2 focus:outline-none border-solid border-b border-orange-400 "
+              />
+              <input
+                type="text"
+                name="taluka"
+                value={newSlot.taluka}
+                onChange={handleInputChange}
+                placeholder="Taluka"
+                required
+                className="h-[50px] text-start p-1 m-2 focus:outline-none border-solid border-b border-orange-400 "
+              />
+              <input
+                type="text"
+                name="district"
+                value={newSlot.district}
+                onChange={handleInputChange}
+                placeholder="District"
+                required
+                className="h-[50px] text-start p-1 m-2 focus:outline-none border-solid border-b border-orange-400 "
+              />
+              <input
+                type="text"
+                name="pincode"
+                value={newSlot.pincode}
+                onChange={handleInputChange}
+                placeholder="Pincode"
+                required
+                className="h-[50px] text-start p-1 m-2 focus:outline-none border-solid border-b border-orange-400 "
+              />
+
+             </div>
+             
+              <input
+                type="text"
+                name="hourly_price"
+                value={newSlot.hourly_price}
+                onChange={handleInputChange}
+                placeholder="Hourly Price"
+                required
+                className="flex-1 m-2 p-1 focus:outline-none border-solid border-b border-orange-400"
+              />
+              <button
+                type="submit"
+                disabled={isCreating}
+                className="m-2 bg-green-300 w-fit flex items-center justify-between p-2 font-[600] rounded-md text-green-900"
+              >
+                <IoIosAddCircleOutline />
+                Add Slot
+              </button>
             </div>
           </form>
+         
+
 
           <div>
             <h4 className="w-[100%] text-[32px] font-[500] text-slate-800 text-center">YOUR SLOTS</h4>

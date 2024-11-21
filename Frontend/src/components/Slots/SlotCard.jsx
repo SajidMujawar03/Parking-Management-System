@@ -3,16 +3,29 @@ import { CiCircleMinus } from "react-icons/ci";
 import { BASE_URL } from '../../config.js';
 import { toast } from 'react-toastify';
 
+
+
 const SlotCard = ({ slot, refetch }) => {
-  const { photo, hourly_price, address, _id } = slot;
+  const { photo, hourly_price, address, _id ,expiry_date} = slot;
+  
+  const date= expiry_date
+  ? new Date(expiry_date).toLocaleString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    })
+  : 'No Expiration Date';
 
   const handleDeleteSlot = async () => {
     try {
       const response = await fetch(`${BASE_URL}/slot/delete-slot/${_id}`, {
         method: 'DELETE',
-        // headers: {
-        //   Authorization: `Bearer ${token}`,
-        // },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
       });
 
       const res=await response.json()
@@ -41,6 +54,7 @@ const SlotCard = ({ slot, refetch }) => {
             Hourly Price: Rs.{hourly_price}
           </p>
           <p>Address: {address}</p>
+          <p>Expiration Date : {date}</p>
         </div>
         <button
           onClick={handleDeleteSlot}

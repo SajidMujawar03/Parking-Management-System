@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+
+
 const slotSchema=new mongoose.Schema({
         photo:{
             type:String,
@@ -41,7 +43,8 @@ const slotSchema=new mongoose.Schema({
         review:[{
             type:mongoose.Schema.Types.ObjectId,
             ref:"Review",
-        }]
+        }],
+        expiry_date: { type: Date}, // Expiry date
     
 },
     {

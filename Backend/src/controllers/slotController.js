@@ -6,7 +6,7 @@ import Booking from '../models/booking.model.js';
 
 export const createSlot = async (req, res) => {
     try {
-        const { photo, address, hourly_price, owner,coordinates: { latitude, longitude } } = req.body;
+        const { photo, address, hourly_price, owner,coordinates: { latitude, longitude },expiry_date } = req.body;
 
         // console.log(req.body)
 
@@ -18,6 +18,7 @@ export const createSlot = async (req, res) => {
             latitude,
             address,
             owner,
+            expiry_date
         });
         const user=await Owner.findById(owner);
         if(!user)

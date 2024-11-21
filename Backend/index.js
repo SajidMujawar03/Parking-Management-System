@@ -13,6 +13,8 @@ import owner from './src/routes/owner.js'
 import slot from "./src/routes/slots.js"
 import booking from './src/routes/booking.js'
 import websiteReview from "./src/routes/webReview.js";
+import './src/cron.js'
+
 const app=express();
 
 const port=process.env.PORT ;
