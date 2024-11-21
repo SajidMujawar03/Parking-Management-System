@@ -9,6 +9,8 @@ export const createSlot = async (req, res) => {
         const { photo, address, hourly_price, owner,coordinates: { latitude, longitude } } = req.body;
 
         // console.log(req.body)
+
+
         const newSlot = new Slot({
             photo,
             hourly_price,
@@ -20,18 +22,19 @@ export const createSlot = async (req, res) => {
         const user=await Owner.findById(owner);
         if(!user)
         {
-            return res.status(404).json({ message: 'user not found' });
+            return res.status(404).json({success:false, message: 'user not found' });
         }
 
         await newSlot.save();
 
         // Optionally, update the owner's slots array
         await Owner.findByIdAndUpdate(owner, { $push: { slots: newSlot._id } });
-
-        return res.status(201).json({ message: 'Slot created successfully', slot: newSlot });
+        console.log("success")
+        return res.status(201).json({success:true, message: 'Slot created successfully', slot: newSlot });
     } catch (error) {
         // console.log(error.message)
-        return res.status(500).json({ message: 'Failed to create slot', error: error.message });
+        console.log(error)
+        return res.status(500).json({success:false, message: 'Failed to create slot'});
     }
 };
 
@@ -70,14 +73,21 @@ export const deleteSlot = async (req, res) => {
 
         // First, find and delete the slot
         if (activeBookings.length > 0) {
-            return res.status(400).json({ message: 'Slot is currently booked and cannot be deleted.' });
+            return res.status(400).json({success:false, message: 'Slot is currently booked and cannot be deleted.' });
           }
+
+          await Owner.findByIdAndUpdate(req.user.id, {
+            $pull: { slots: slotId },  // Remove the slot ID from the owner's slots array
+          });
       
           // Delete the slot if no active bookings
           await Slot.findByIdAndDelete(slotId);
-          res.status(200).json({ message: 'Slot deleted successfully.' });
+          res.status(200).json({success:true, message: 'Slot deleted successfully.' });
         } catch (error) {
-          res.status(500).json({ message: 'Server error.' });
+
+
+            console.log(error)
+          res.status(500).json({success:false, message: 'Server error.' });
         }
 };
 

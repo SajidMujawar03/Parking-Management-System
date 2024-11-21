@@ -216,16 +216,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
 import React, { useContext, useEffect, useState } from 'react';
 import { useGeolocated } from "react-geolocated";
 import useFetchData from '../../hooks/useFetchData.jsx';
@@ -239,7 +229,6 @@ import { IoIosAddCircleOutline } from "react-icons/io";
 import SlotCard from '../../components/Slots/SlotCard.jsx';
 import { toast } from 'react-toastify';
 
-
 const MyBookings = () => {
   const [selectedFile, setSelectedFile] = useState('');
   const [previewURL, setPreviewURL] = useState('');
@@ -250,10 +239,7 @@ const MyBookings = () => {
   const [err, setErr] = useState(null);
 
   // Fetch existing slots
-
-  
   const { data: slots, loading, error, refetch } = useFetchData(`${BASE_URL}/owner/created-slots/${user._id}`);
- 
 
   const { coords, isGeolocationAvailable, isGeolocationEnabled } = useGeolocated({
     positionOptions: {
@@ -268,18 +254,14 @@ const MyBookings = () => {
     } else if (!isGeolocationEnabled) {
       setErr("Geolocation is not enabled. Please enable it in your browser settings.");
     } else if (coords) {
-      console.log(coords.accuracy)
-      // Check if the accuracy is acceptable
-      if (coords.accuracy <= 2000) { // Accept only if accuracy is less than or equal to 500 meters
+      if (coords.accuracy <= 2000) {
         setLocation({ latitude: coords.latitude, longitude: coords.longitude });
       } else {
-       
         setErr("Location accuracy is too low. Please move to an open space.");
       }
     }
   }, [coords, isGeolocationAvailable, isGeolocationEnabled]);
 
-  // Initialize newSlot with empty fields
   const [newSlot, setNewSlot] = useState({
     photo: '',
     hourly_price: '',
@@ -290,7 +272,6 @@ const MyBookings = () => {
 
   useEffect(() => {
     if (location) {
-      // Only update `newSlot` once `location` is available
       setNewSlot((prevSlot) => ({
         ...prevSlot,
         coordinates: { latitude: location.latitude, longitude: location.longitude },
@@ -317,12 +298,19 @@ const MyBookings = () => {
   const handleAddSlot = async (e) => {
     e.preventDefault();
     setIsCreating(true);
-  
+
+    // Check that latitude and longitude are not empty or invalid
+    if (!newSlot.coordinates.latitude || !newSlot.coordinates.longitude) {
+      setErr("Location is not valid.");
+      setIsCreating(false);
+      return;
+    }
+
     try {
       if (isNaN(parseFloat(newSlot.hourly_price))) {
         throw new Error("Price should be a number");
       }
-  
+
       const response = await fetch(`${BASE_URL}/slot/create-slot`, {
         method: 'POST',
         headers: {
@@ -331,24 +319,24 @@ const MyBookings = () => {
         },
         body: JSON.stringify(newSlot),
       });
-  
+
       const result = await response.json();
-  
+
       if (response.ok) {
-        // Clear the form
+        // Reset the form but keep the coordinates intact
         setPreviewURL('');
         setNewSlot({
           photo: '',
           hourly_price: '',
           address: '',
-          coordinates: { latitude: '', longitude: '' },
+          coordinates: newSlot.coordinates, // Preserve coordinates
           owner: user._id,
         });
-  
+
         toast.success("Slot created successfully!");
-        
+
         // Refetch slots
-        refetch(); 
+        refetch();
       } else {
         throw new Error(result.message || 'Failed to create slot');
       }
@@ -359,7 +347,6 @@ const MyBookings = () => {
       setIsCreating(false);
     }
   };
-  
 
   return (
     <div>
@@ -402,6 +389,7 @@ const MyBookings = () => {
                     accept=".jpg, .png"
                     onChange={handleFileInputChange}
                     className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer z-99"
+                    required
                   />
                 </div>
               </div>
@@ -427,13 +415,11 @@ const MyBookings = () => {
                 <button
                   type="submit"
                   disabled={isCreating}
-                  className="m-2 bg-orange-300 w-fit flex items-center justify-between p-2 font-[600] rounded-md text-slate-900"
+                  className="m-2 bg-green-300 w-fit flex items-center justify-between p-2 font-[600] rounded-md text-green-900"
                 >
                   <IoIosAddCircleOutline />
                   Add Slot
                 </button>
-
-                
               </div>
             </div>
           </form>
@@ -441,17 +427,16 @@ const MyBookings = () => {
           <div>
             <h4 className="w-[100%] text-[32px] font-[500] text-slate-800 text-center">YOUR SLOTS</h4>
             {slots.length > 0 ? (
-  slots.map((slot) => (
-    <div key={slot._id} className="w-[100%]">
-      <SlotCard slot={slot} refetch={refetch} />
-    </div>
-  ))
-) : (
-  <h3 className="mt-5 text-center text-orange-500 leading-7 text-[20px] font-semibold">
-    You have not created any slot
-  </h3>
-)}
-
+              slots.map((slot) => (
+                <div key={slot._id} className="w-[100%]">
+                  <SlotCard slot={slot} refetch={refetch} />
+                </div>
+              ))
+            ) : (
+              <h3 className="mt-5 text-center text-orange-500 leading-7 text-[20px] font-semibold">
+                You have not created any slot
+              </h3>
+            )}
           </div>
         </div>
       )}

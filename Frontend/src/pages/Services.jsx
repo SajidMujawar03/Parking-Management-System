@@ -98,7 +98,7 @@ const Services = () => {
     };
 
     const toastMessage=(slot)=>{
-            user.role==='user'?toast.success(`Hi ${user.name}!!`):toast.error("Only Users can Book")
+            (user && user.role==='user')?toast.success(`Hi ${user.name}!!`):toast.error("Only Visitors can Book")
             user.role==='user'?navigate(`/booking/${slot._id}`):navigate('/login')
     }
 

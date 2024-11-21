@@ -10,7 +10,19 @@ import { AuthContextProvider } from './context/AuthContext.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <ToastContainer autoClose={1000}/>
+    <ToastContainer
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        style={{
+          
+          zIndex: 9999, // Ensure the toast appears above the header and other elements
+        }}/>
     <BrowserRouter>
       <AuthContextProvider>
         <App />

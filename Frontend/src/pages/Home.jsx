@@ -15,7 +15,7 @@ const Home = () => {
                   <div className='md:w-full max-w-fit'>
                       <div className='p-2 flex flex-col justify-between'>
                           <h2 className='text-[36px] font-bold'>
-                            Are you a <span className='text-[#F3C623]'>USER</span>?
+                            Are you a <span className='text-[#F3C623]'>VISITOR</span>?
                           </h2>
                           <p className='text-[24px]'>Connect to us</p>
                           <div className='w-full p-4 '>

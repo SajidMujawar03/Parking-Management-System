@@ -15,8 +15,10 @@ const SlotCard = ({ slot, refetch }) => {
         // },
       });
 
+      const res=await response.json()
+
       if (!response.ok) {
-        throw new Error('Failed to delete slot');
+        throw new Error(res.message);
       }
 
       toast.success("Slot deleted successfully!");
@@ -42,7 +44,7 @@ const SlotCard = ({ slot, refetch }) => {
         </div>
         <button
           onClick={handleDeleteSlot}
-          className="m-2 w-fit flex items-center justify-between p-2 font-[600] rounded-md text-slate-900 border-red-500 absolute"
+          className="m-2 w-fit flex items-center justify-between p-2  rounded-md  border-red-500 absolute bottom-0 right-0 border border-solid font-bold text-red-500"
         >
           <CiCircleMinus />
           Delete Slot
