@@ -19,6 +19,7 @@ const MyProfile = ({user}) => {
     {
       name:'',
       email:'',
+      oldPassword:'',
       password:'',
       photo:null,
       phone:''
@@ -30,6 +31,7 @@ const MyProfile = ({user}) => {
       name:user.name||"",
       email:user.email||"",
       password:formData.password||"",
+      oldPassword:formData.oldPassword||'',
       photo:user.photo||"",
       phone:user.phone||""
       
@@ -70,7 +72,7 @@ const MyProfile = ({user}) => {
     
     try {
       
-      const res =await fetch(`${BASE_URL}/users/${user._id}`,
+      const res =await fetch(`${BASE_URL}/owner/${user._id}`,
         {method:'put',
         headers:{
             "Content-Type":"application/json",
@@ -79,6 +81,8 @@ const MyProfile = ({user}) => {
         body:JSON.stringify(formData),
         }
       )
+
+      console.log(res)
 
       
 
@@ -97,11 +101,11 @@ const MyProfile = ({user}) => {
       setLoading(false)
       toast.success(message)
 
-      navigate('/users/profile/me')
+      navigate('/owner/profile/me')
       
     } catch (error) {
       
-      toast.error(err.message)
+      toast.error(error.message)
 
       setLoading(false)
     }
@@ -129,10 +133,18 @@ const MyProfile = ({user}) => {
       readOnly
       className="w-full  py-3 pr-4 border-b border-solid border-orange-400 focus:outline-none focus:border-b-orange-600 text-[16px] leading-7 text-slate-900 placeholder:text-slate-600  cursor-pointer" required/>
     </div>
-    <div className="mb-5">
+    <div className="mb-5 grid grid-cols-1 md:grid-cols-2 gap-1">
       <input 
       type="password" 
-      placeholder="Enter Your Password" 
+      placeholder="Enter Old Password*" 
+      name="oldPassword" 
+      required
+      value={formData.oldPassword}
+      onChange={handleInputChange}
+      className="w-full  py-3 pr-4 border-b border-solid border-orange-400 focus:outline-none focus:border-b-orange-600 text-[16px] leading-7 text-slate-900 placeholder:text-slate-600  cursor-pointer" />
+      <input 
+      type="password" 
+      placeholder="Enter New Password" 
       name="password" 
       value={formData.password}
       onChange={handleInputChange}
@@ -166,9 +178,20 @@ const MyProfile = ({user}) => {
         </select>
       </label>
     </div> */}
-    <div className="mb-5">
+    <div className="mb-5 grid grid-cols-2 gap-2">
+
                         <input type="tel"  name="phone" pattern="[0-9]{10}" placeholder="Enter Your Mobile No. Format(0000000000)"value={formData.phone} onChange={handleInputChange} className="w-full  py-3 border-b border-solid border-orange-400 focus:outline-none focus:border-b-orange-600 text-[16px] leading-7 text-slate-900 placeholder:text-slate-600  cursor-pointer" required autoComplete="current-password"/>
-                        </div>
+                        
+    <input 
+    type="text" 
+    placeholder="Enter Bank Account Number" 
+    name="bankAccount" 
+    value={formData.bankAccount || ""} 
+    onChange={handleInputChange}
+    className="w-full py-3 pr-4 border-b border-solid border-orange-400 focus:outline-none focus:border-b-orange-600 text-[16px] leading-7 text-slate-900 placeholder:text-slate-600 cursor-pointer" 
+  />
+                        
+    </div>
 
 
 

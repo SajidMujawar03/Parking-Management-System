@@ -1,25 +1,62 @@
 // src/components/ContactUs.js
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
+import { authContext } from '../context/AuthContext';
 
 const Contact = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+  const {user}=useContext(authContext)
+  const [name, setName] = useState(user.name);
+  const [email, setEmail] = useState(user.email);
   const [review, setReview] = useState('');
   const [rating, setRating] = useState(1);
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitted(true);
 
     // Here you can send the form data to your server or API
     const formData = {
+      userId:user._id,
       name,
       email,
       review,
       rating,
     };
     console.log('Submitted Data:', formData);
+
+    try {
+      const res =await fetch(`${BASE_URL}/webReview/postReview`,
+        {method:'post',
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body:JSON.stringify(formData),
+        }
+      )
+
+      const result=await res.json()
+      
+ 
+      // console.log(res.ok)
+      if(!res.ok)
+      {
+       
+        throw new Error(result.message || "something went wrong")
+      }
+
+        // console.log("hi"
+      toast.success(result.message)
+
+      navigate('/')
+      
+    } catch (error) {
+      
+      toast.error(error.message)
+
+      setLoading(false)
+    }
+
+
   };
 
   return (

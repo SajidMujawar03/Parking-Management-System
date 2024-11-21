@@ -4,17 +4,36 @@ import bcrypt from "bcryptjs"
 export const updateProfile=async (req,res)=>{
     const id=req.params.id
     try {
- 
+        
+        const users = await Owner.findOne({id});
+        if (!users) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+
         if(req.body.password!=null)
         {
+            const isMatched = await bcrypt.compare(req.body.oldPassword, users.password);
+
+            if (!isMatched) {
+                return res.status(400).json({ success: false, message: "Password did not match" });
+            }
+
             const salt=await bcrypt.genSalt(10);
             const hashPassword=await bcrypt.hash(req.body.password,salt);
             req.body.password=hashPassword;
+        }else
+        {
+            delete req.body.password;
         }
+
+        delete req.body.oldPassword;
+
 
         const user=await Owner.findByIdAndUpdate(id,{$set:req.body},{new:true}).select("-password").select("-slots");
        
-        // console.log(user)
+        console.log(user)
+        console.log(req.body)
         res.status(200).json({success:true,message:"Updating Profile...",data:user})
 
 

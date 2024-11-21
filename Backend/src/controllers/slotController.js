@@ -1,6 +1,6 @@
 import Slot from '../models/slot.model.js';
 import Owner from '../models/owner.model.js';
-// import Booking from '../models/booking.model.js';
+import Booking from '../models/booking.model.js';
 // import Slot from '../models/slot.model.js';
 // import User from '../models/user.model.js';
 
@@ -66,23 +66,20 @@ export const deleteSlot = async (req, res) => {
     try {
         const  slotId  = req.params.id;
 
+        const activeBookings = await Booking.find({ slot: slotId, endTime: { $gt: new Date() } });
+
         // First, find and delete the slot
-        const deletedSlot = await Slot.findByIdAndDelete(slotId);
-
-        if (!deletedSlot) {
-            return res.status(404).json({ message: 'Slot not found' });
+        if (activeBookings.length > 0) {
+            return res.status(400).json({ message: 'Slot is currently booked and cannot be deleted.' });
+          }
+      
+          // Delete the slot if no active bookings
+          await Slot.findByIdAndDelete(slotId);
+          res.status(200).json({ message: 'Slot deleted successfully.' });
+        } catch (error) {
+          res.status(500).json({ message: 'Server error.' });
         }
-
-        // Optionally, remove the slot from the owner's slots array
-        await Owner.findByIdAndUpdate(deletedSlot.owner, { $pull: { slots: slotId } });
-        
-
-        return res.status(200).json({ message: 'Slot deleted successfully' });
-    } catch (error) {
-        return res.status(500).json({ message: 'Failed to delete slot', error: error.message });
-    }
 };
-
 
 export const getSlot=async(req,res)=>{
     const id=req.params.id;

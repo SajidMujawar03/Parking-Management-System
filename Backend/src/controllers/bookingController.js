@@ -19,12 +19,12 @@ const razorpay = new Razorpay({
 export const getSlotBookings=async (req, res) => {
     const slotId=req.params.slotId;
     
-    const slotBookings = await Booking.findOne({
-        slotId
+    const slotBookings = await Booking.find({
+        slot:slotId
     });
     
     if (slotBookings==null) {
-        return res.status(404).json({success:false, message: 'No booking info',data:slotBookings });
+        return res.status(404).json({success:false, message: 'No booking info' });
     }
     
     res.json({ success:true,message:"slot data",data:slotBookings });

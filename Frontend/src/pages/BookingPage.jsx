@@ -22,7 +22,10 @@ const BookingPage = () => {
     const [bookingData,setBookingData]=useState(null);
     const [fromDate, setFromDate] = useState(() => {
         const today = new Date();
-        return today.toISOString().split('T')[0]; // Format to 'YYYY-MM-DD'
+        const day = String(today.getDate()).padStart(2, '0'); // Ensure two digits
+        const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+        const year = today.getFullYear();
+        return `${year}-${month}-${day}`; // Format to 'dd-mm-yyyy'
     });
     
     const [fromTime, setFromTime] = useState(() => {
@@ -32,7 +35,10 @@ const BookingPage = () => {
 
     const [toDate, setToDate] = useState(() => {
         const today = new Date();
-        return today.toISOString().split('T')[0]; // Format to 'YYYY-MM-DD'
+        const day = String(today.getDate()).padStart(2, '0'); // Ensure two digits
+        const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+        const year = today.getFullYear();
+        return `${year}-${month}-${day}`; // Format to 'dd-mm-yyyy'
     });
     
     const [toTime, setToTime] = useState(() => {
@@ -43,7 +49,7 @@ const BookingPage = () => {
     const [paymentStatus, setPaymentStatus] = useState('');
 
     useEffect(() => {
-        console.log(user)
+        // console.log(user)
         const fetchSlotDetails = async () => {
             try {
                 const response = await fetch(`${BASE_URL}/slot/slot/${slotId}`);
@@ -59,39 +65,49 @@ const BookingPage = () => {
             try {
                 const response = await fetch(`${BASE_URL}/bookings/booking/${slotId}`);
                 const res = await response.json();
-                const data=res.data
+                const datas=res.data;
         
-                // console.log(response," ",data)
+                // console.log(datas)
                 // Check if data is an object
-                if ( data !== null && typeof data === 'object') {
-                    const today = new Date();
-                    
-                    // Assuming `data` is an object where the bookings are stored in a property like 'bookings'
-                    // Adjust the structure based on your actual response
-                    const filteredBookings = Object.entries(data.bookings)  // Convert 'bookings' to an array of entries
-                        .filter(([key, dat]) => {
-                            const bookingStartDate = new Date(dat.booking_start);  // Convert to Date object
-                            const bookingEndDate = new Date(dat.booking_end);      // Convert to Date object
-        
-                            // Compare full date (year, month, day) of booking_start and booking_end with today's date
-                            return (
-                                bookingStartDate.getDate() === today.getDate() &&
-                                bookingStartDate.getMonth() === today.getMonth() &&
-                                bookingStartDate.getFullYear() === today.getFullYear() &&
-                                bookingEndDate.getDate() === today.getDate() &&
-                                bookingEndDate.getMonth() === today.getMonth() &&
-                                bookingEndDate.getFullYear() === today.getFullYear()
-                            );
-                        })
-                        .reduce((result, [key, dat]) => {
-                            result[key] = dat;  // Rebuild the object with the filtered bookings
-                            return result;
-                        }, {});
-        
-                    console.log(filteredBookings);
-                    setBookingData(filteredBookings)
+                const today = new Date();
+
+                // Function to convert date to IST and return only the date part
+                function toIST(date) {
+                    // const offset = 330; // IST offset in minutes (+5:30)
+                    const localDate = new Date(date);
+                    return localDate.toLocaleDateString(); // Indian format
                 }
 
+                const filteredData = datas.filter((data,index) => {
+                    const FromDate = new Date(data.booking_start);
+                    const ToDate = new Date(data.booking_end);
+
+                    // console.log( index,"start",toIST(FromDate) ,"end",toIST(ToDate),toIST(today), toIST(FromDate) === toIST(today) ||
+                    // toIST(ToDate) === toIST(today))
+                    return (
+                        
+                        toIST(FromDate) === toIST(today) ||
+                        toIST(ToDate) === toIST(today)
+                    );
+                });
+
+                // console.log(filteredData)
+
+                const indianTime = filteredData.map(data => {
+                    
+                    return {
+                        ...data, // Preserve other properties
+                        booking_start: new Date(data.booking_start).toLocaleString(), // Convert to IST
+                        booking_end: new Date(data.booking_end).toLocaleString(), // Convert to IST
+                        sc:1
+                    };
+                });
+                
+                // console.log(indianTime);
+                
+
+                // Update the state
+                setBookingData(indianTime);
                 
                 console.log(bookingData)
             } catch (error) {
@@ -112,7 +128,7 @@ const BookingPage = () => {
                 const totalHours = (toDateTime - fromDateTime) / (1000 * 60 * 60); // Convert milliseconds to hours
 
                 if (totalHours > 0) {
-                    setAmount((totalHours * slot.hourly_price).toFixed(2));
+                    setAmount((totalHours * slot.hourly_price).toFixed(0));
                 } else {
                     setAmount(0); // Reset if invalid range
                 }
@@ -170,9 +186,10 @@ const BookingPage = () => {
             if (!availabilityResponse.ok || !availabilityData.isAvailable) {
                 throw new Error("The selected slot is not available for the chosen time.");
             }
+            console.log("hi",selectedFromDate)
 
             const totalHours=(selectedToDate-selectedFromDate)/(1.0*1000*60*60);
-            const totalAmout=(totalHours*slot.hourly_price).toFixed(2);
+            // const totalAmout=(totalHours*slot.hourly_price).toFixed(2);
     
             // Step 2: Create Razorpay order if the slot is available
             const response = await fetch(`${BASE_URL}/bookings/create-order`, {
@@ -182,7 +199,7 @@ const BookingPage = () => {
                 },
                 body: JSON.stringify({
                     slotId,
-                    amount: totalAmout,
+                    amount: amount,
                 }),
             });
     
@@ -199,7 +216,7 @@ const BookingPage = () => {
             // Step 3: Initiate Razorpay payment process
             const options = {
                 key: razorpay_key, // Replace with your Razorpay API key
-                amount: totalAmout,
+                amount: amount,
                 currency: 'INR',
                 order_id: data.order_id,
                 handler: async function (response) {
@@ -241,7 +258,7 @@ const BookingPage = () => {
                                 fromDate: selectedFromDate,
                                 toDate: selectedToDate,
                                 totalHours:totalHours,
-                                totalAmount:totalAmout,
+                                totalAmount:amount,
                                 paymentStatus:"completed",
                                 userId:user._id,
                                 paymentMethod:"Razorpay"
@@ -278,12 +295,12 @@ const BookingPage = () => {
 
     return (
         
-        <div className="container mt-8 ">
+        <div className="container mt-8 w-full">
             {slot?
-
-                <div className='border border-solid p-2 grid grid-cols-1 place-items-center rounded-lg'>
-            <h2 className="text-2xl font-bold mb-4 w-full">Book Slot: {slot.address}</h2>
-            <div className={bookingData!==null && bookingData.length?"grid grid-cols-2 place-items-center":"grid grid-cols-1 place-items-center"}>
+                <div className='grid grid-cols-2 w-full border border-solid rounded-lg'>                
+            <div className=' p-2 grid grid-cols-1 place-items-center '>
+            <h2 className="text-2xl font-bold mb-4 w-full text-center">Book Slot: {slot.address}</h2>
+            <div className="grid grid-cols-1 place-items-center">
             <div className="flex flex-col items-center border border-solid border-blue-400 w-[300px] p-2 rounded-lg">
                 <img src={slot.photo} alt="Slot" className="w-60 h-32 mb-4" />
                 <div>
@@ -316,7 +333,7 @@ const BookingPage = () => {
                     <FaMoneyBillAlt className='mr-2'/> Price: Rs. {slot.hourly_price} per hour
                 </div>
                 <div>
-                    <p>Total Amount : {amount}</p>
+                    <p className='m-1 text-blue-700 bg-blue-100 p-2 rounded-sm grid grid-flow-col place-items-center gap-1 place-content-center'>Total Amount : <b className=' text-[18px] '>{amount}</b></p>
                 </div>
                 <button onClick={handlePayment} className="bg-blue-500 text-white py-2 px-4 rounded-full">
                     Pay and Book
@@ -325,6 +342,27 @@ const BookingPage = () => {
             </div>
             </div>
             </div>
+            <div className='w-full text-center p-2'>
+            <h2 className="text-2xl font-bold mb-4 w-full">Today's bookings for this slot</h2>
+           
+
+            {(bookingData && bookingData.length>0) ? 
+            <div className='grid grid-cols-1'>{
+            (
+                      
+                bookingData.map((data,index)=>(
+                    <div key={index} className='bg-slate-200 p-1 mt-1 rounded-sm'>
+                           <p>{data.booking_start} - {data.booking_end}</p> 
+                  </div>
+                ))
+                
+            )}</div>
+            :
+            <div>No Bookings are there for this slot</div>
+            }
+            </div>
+            </div>
+
             :
             <div>Loading data</div>
 }

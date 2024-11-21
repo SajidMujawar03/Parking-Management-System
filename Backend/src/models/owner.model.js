@@ -32,7 +32,17 @@ const ownerSchema=mongoose.Schema({
             type:mongoose.Schema.Types.ObjectId,
             ref:"Slot"
         }
-    ]
+    ],
+    bankAccount:{
+        type:String,
+        default:"Yet To be Updated"
+    },
+    amount:
+    {
+        type:Number,
+        default:0
+    }
+
 
     
 },{

@@ -10,7 +10,7 @@ import { AuthContextProvider } from './context/AuthContext.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <ToastContainer />
+    <ToastContainer autoClose={1000}/>
     <BrowserRouter>
       <AuthContextProvider>
         <App />

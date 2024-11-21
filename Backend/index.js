@@ -12,6 +12,7 @@ import user from "./src/routes/user.js"
 import owner from './src/routes/owner.js'
 import slot from "./src/routes/slots.js"
 import booking from './src/routes/booking.js'
+import websiteReview from "./src/routes/webReview.js";
 const app=express();
 
 const port=process.env.PORT ;
@@ -38,6 +39,7 @@ app.use("/api/v1/user",user);
 app.use("/api/v1/owner",owner);
 app.use("/api/v1/slot",slot);
 app.use('/api/v1/bookings',booking)
+app.use('/api/v1/webReview',websiteReview)
 
 
 const connectDB = async () => {

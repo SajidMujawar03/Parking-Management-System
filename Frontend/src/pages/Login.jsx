@@ -68,6 +68,8 @@ const Login = () => {
               token:result.token
             }
           })
+
+          console.log(result.data)
     
      
           setLoading(false)

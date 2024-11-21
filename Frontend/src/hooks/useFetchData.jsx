@@ -1,65 +1,45 @@
-import React, { useContext, useEffect, useState } from 'react'
-// import { token } from '../config.js'
-import { authContext } from '../context/AuthContext.jsx'
-
+import React, { useContext, useEffect, useState, useCallback } from 'react';
+import { authContext } from '../context/AuthContext.jsx';
 
 const useFetchData = (url) => {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const { token } = useContext(authContext);
 
-const [data,setData]=useState([])
-const [loading,setLoading]=useState(false)
-const  [error,setError]=useState(null)
-const {token,dispatch}=useContext(authContext)
+  // Define the fetchData function
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    setError(null); // Reset error state on refetch
+    try {
+      console.log(url, "  ", token);
+      const res = await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-useEffect(()=>{
+      const result = await res.json();
 
-    
+      if (!res.ok) {
+        throw new Error(result.message + " 😠");
+      }
 
-
-    const fetchData=async()=>{
-        setLoading(true)
-        console.log(url,"  ",token)
-       try{ const res=await fetch(url,{
-            headers:{
-                // "Content-Type": "application/json"
-                
-                Authorization:`Bearer ${token}`}
-         })
-
-        const result =await res.json();
-     
-        if(!res.ok)
-        {
-            throw new Error(result.message + "😠")
-        }
-
-        console.log(result.data)
-
-        setData(result.data)
-        setLoading(false)
-       
-
-
+      console.log(result.data);
+      setData(result.data);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
     }
-    catch(error){
-        
-        
+  }, [url, token]); // Dependencies for the useCallback hook
 
-        setLoading(false)
-        setError(error.message)
-    }
+  // Use fetchData when the component mounts or URL changes
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
+  return { data, loading, error, refetch: fetchData }; // Return refetch as part of the hook's result
+};
 
-    }
-
-    fetchData()
- 
-
-
-},[url]);
-
-  return {data,loading,error}
-    
-  
-}
-
-export default useFetchData
+export default useFetchData;

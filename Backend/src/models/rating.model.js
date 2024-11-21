@@ -7,6 +7,15 @@ const websiteReviewSchema = new mongoose.Schema({
         ref: 'User',  // Reference to the user giving the review
         required: true
     },
+    email:{
+        type:String,
+        required:true
+    },
+    name:
+    {
+        type:String,
+        required:true
+    },
     rating: {
         type: Number,
         required: true,
