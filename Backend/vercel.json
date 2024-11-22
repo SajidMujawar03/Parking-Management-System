@@ -1,14 +1,4 @@
 {
-<<<<<<< HEAD
-    "version":2,
-    "routes":[
-        {
-            "src":"/(.*)",
-            "dest":"/"
-        }
-    ]
-}
-=======
   "version": 2,
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.js" }
@@ -24,4 +14,4 @@
     }  
   ]
 }
->>>>>>> 330814e9472e4ce77ede139e3f5ea2d6140f7c74
+
