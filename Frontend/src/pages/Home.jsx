@@ -2,14 +2,14 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import About from '../components/About/About.jsx'
 import Service from '../components/Service/Service.jsx'
-
+import hero from "../assets/hero.jpg"
 
 
 
 const Home = () => {
   return (
     <>
-    <section className="hero_section md:pt-[60px] 2xl:h-[800px]">
+    <section className="hero_section md:pt-[60px] 2xl:h-[800px]" style={{ backgroundImage: `url(${hero})` }}>
       <div className="container px-4 md:px-[100px] flex items-center justify-center md:justify-end md:h-[75vh]">
         <div className="flex flex-col md:flex-row w-full max-w-[1000px] justify-center items-center">
           {/* Visitor Section */}
@@ -73,7 +73,6 @@ const Home = () => {
     </section>
   
     <section>
-      {/* <Service /> */}
     </section>
   </>
   

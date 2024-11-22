@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useGeolocated } from 'react-geolocated';
 import useFetchData from '../../hooks/useFetchData.jsx';
-// import { BASE_URL } from '../../config.js';
+
 import Loading from '../../components/Loader/Loading.jsx';
 import Error from '../../components/Error/Error.jsx';
 import { authContext } from '../../context/AuthContext.jsx';
@@ -150,6 +150,7 @@ const MyBookings = () => {
   {!loading && !error && (
     <div className="p-4">
       {/* Add Slot Form */}
+      <p className='text-res-400'>Please turn on your location</p>
       <form onSubmit={handleAddSlot} className="rounded-md border border-orange-100 p-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {/* File Upload */}

@@ -1,9 +1,9 @@
 import React from 'react';
 import { CiCircleMinus } from "react-icons/ci";
-// import { BASE_URL } from '../../config.js';
+
 import { toast } from 'react-toastify';
 
-// Corrected BASE_URL line
+
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 const SlotCard = ({ slot, refetch }) => {
@@ -37,7 +37,7 @@ const SlotCard = ({ slot, refetch }) => {
 
       toast.success("Slot deleted successfully!");
       
-      // Refetch slots
+   
       refetch(); 
     } catch (error) {
       toast.error(error.message || 'Error deleting slot');
@@ -47,7 +47,7 @@ const SlotCard = ({ slot, refetch }) => {
   return (
     <div className="p-4 flex flex-col sm:flex-row items-start sm:items-center justify-start border-solid border-orange-200 rounded-lg shadow-md relative">
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
-      {/* Image Section */}
+    
       <div className="w-full sm:w-[275px] h-auto flex justify-center">
         <img 
           src={photo} 
@@ -56,7 +56,7 @@ const SlotCard = ({ slot, refetch }) => {
         />
       </div>
   
-      {/* Details Section */}
+     
       <div className="flex flex-col justify-between">
         <p className="text-[16px] sm:text-[18px] lg:text-[26px] text-slate-800 font-semibold mb-2">
           Hourly Price: Rs.{hourly_price}
@@ -70,7 +70,7 @@ const SlotCard = ({ slot, refetch }) => {
       </div>
     </div>
   
-    {/* Delete Button */}
+  
     <button
       onClick={handleDeleteSlot}
       className="mt-4 sm:mt-0 sm:absolute sm:bottom-4 sm:right-4 w-full sm:w-auto flex items-center justify-center px-4 py-2 rounded-md border border-red-500 font-bold text-red-500"

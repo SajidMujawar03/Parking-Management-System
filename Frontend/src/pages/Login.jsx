@@ -3,14 +3,13 @@ import { Link, useNavigate } from 'react-router-dom'
 import HashLoader from 'react-spinners/HashLoader'
 import { authContext } from '../context/AuthContext'
 import { toast } from 'react-toastify'
-// import { BASE_URL } from '../config.js'
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 
 
 const Login = () => {
-    //formdata that need to besubmitted to backend for login verification
+   
     const [formData,setFormData]=useState({
         email:'',
         password:'',
@@ -55,14 +54,14 @@ const Login = () => {
           const result=await res.json()
           
      
-          // console.log(res.ok)
+          
           if(!res.ok)
           {
            
             throw new Error(result.message || "something went wrong")
           }
-    
-            // console.log("hi")
+  
+            
           dispatch({
             type:"LOGIN_SUCCESS",
             payload:{
@@ -72,7 +71,6 @@ const Login = () => {
             }
           })
 
-          console.log(result.data)
     
      
           setLoading(false)

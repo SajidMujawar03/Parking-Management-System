@@ -3,7 +3,7 @@ import { authContext } from '../../context/AuthContext.jsx'
 
 
 import useFetchData from "../../hooks/useFetchData.jsx"
-// import { BASE_URL } from '../../config.js'
+
 
 import MyBookings from './MyBookings.jsx'
 import MyProfile from './MyProfile.jsx'
@@ -42,7 +42,7 @@ const DashBoard = () => {
             const res = await fetch(`${BASE_URL}/owner/${user._id}`, {
                 method: 'DELETE',
                 headers: {
-                    Authorization: `Bearer ${token}`  // Pass the token for authorization
+                    Authorization: `Bearer ${token}`  
                 }
             });
 

@@ -23,7 +23,6 @@ const Contact = () => {
       review,
       rating,
     };
-    console.log('Submitted Data:', formData);
 
     try {
       const res = await fetch(`${BASE_URL}/webReview/postReview`, {

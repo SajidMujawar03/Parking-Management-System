@@ -37,7 +37,7 @@
     }
 
     .hero_section{
-        @apply  md:bg-[url('./src/assets/hero.jpg')] bg-[url('./src/assets/hero2.jpg')] max-h-fit lg:px-[20px] bg-cover bg-no-repeat ;
+        @apply   max-h-fit lg:px-[20px] bg-cover bg-no-repeat ;
     }
 
     .form_label{

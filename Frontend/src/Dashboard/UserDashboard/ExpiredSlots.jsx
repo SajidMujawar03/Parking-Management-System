@@ -1,7 +1,6 @@
 import React from 'react';
 
 const ExpiredBookings = ({ slots }) => {
-    // console.log(slots)
   
   return (
     <div>

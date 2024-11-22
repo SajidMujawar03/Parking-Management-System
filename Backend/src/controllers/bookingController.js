@@ -38,8 +38,7 @@ export const checkAvailability = async (req, res) => {
     const { slotId, fromDate, toDate } = req.body;
     try {
 
-        // console.log("hi")
-        // Fetch existing bookings for the slot
+        
         const slot = await Slot.findById(slotId);
         const bookings = await Booking.find({ slot: slotId });
         const options = {

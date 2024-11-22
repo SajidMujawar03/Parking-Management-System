@@ -1,7 +1,7 @@
 // LocationFinder.js
 import React, { useEffect, useState } from 'react';
 import LocationComponent from './LocationComponent';
-// import { BASE_URL } from '../config';
+
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 

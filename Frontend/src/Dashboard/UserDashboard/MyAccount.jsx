@@ -3,7 +3,7 @@ import { authContext } from '../../context/AuthContext'
 
 
 import useFetchData from "../../hooks/useFetchData.jsx"
-// import { BASE_URL } from '../../config'
+
 
 import MyBookings from './MyBookings'
 import MyProfile from './MyProfile'
@@ -37,12 +37,11 @@ const MyAccount = () => {
     }
     const handleDelete = async () => {
         try {
-            console.log("hi")
-            // Make DELETE request to the server
+            
             const res = await fetch(`${BASE_URL}/user/${localStorage.getItem("user")._id}`, {
                 method: 'DELETE',
                 headers: {
-                    Authorization: `Bearer ${token}`  // Pass the token for authorization
+                    Authorization: `Bearer ${token}`  
                 }
             });
 

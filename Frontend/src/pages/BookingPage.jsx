@@ -17,28 +17,29 @@ const BookingPage = () => {
     const [bookingData, setBookingData] = useState(null);
     const [fromDate, setFromDate] = useState(() => {
         const today = new Date();
-        const day = String(today.getDate()).padStart(2, '0'); // Ensure two digits
-        const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
-        const year = today.getFullYear();
-        return `${year}-${month}-${day}`; // Format to 'dd-mm-yyyy'
+        const day = String(today.getDate()).padStart(2, '0'); 
+            const month = String(today.getMonth() + 1).padStart(2, '0'); 
+               const year = today.getFullYear();
+        return `${year}-${month}-${day}`; 
+
     });
 
     const [fromTime, setFromTime] = useState(() => {
         const now = new Date();
-        return now.toTimeString().slice(0, 5); // Format to 'HH:MM'
+        return now.toTimeString().slice(0, 5); 
     });
 
     const [toDate, setToDate] = useState(() => {
         const today = new Date();
-        const day = String(today.getDate()).padStart(2, '0'); // Ensure two digits
-        const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+        const day = String(today.getDate()).padStart(2, '0'); 
+        const month = String(today.getMonth() + 1).padStart(2, '0'); 
         const year = today.getFullYear();
-        return `${year}-${month}-${day}`; // Format to 'dd-mm-yyyy'
+        return `${year}-${month}-${day}`; 
     });
 
     const [toTime, setToTime] = useState(() => {
         const now = new Date();
-        return now.toTimeString().slice(0, 5); // Format to 'HH:MM'
+        return now.toTimeString().slice(0, 5); 
     });
 
     const [paymentStatus, setPaymentStatus] = useState('');
@@ -49,10 +50,9 @@ const BookingPage = () => {
             const res = await response.json();
             const datas = res.data;
 
-            // Function to convert date to IST and return only the date part
             function toIST(date) {
                 const localDate = new Date(date);
-                return localDate.toLocaleDateString(); // Indian format
+                return localDate.toLocaleDateString(); 
             }
 
             const filteredData = datas.filter((data, index) => {
@@ -67,13 +67,12 @@ const BookingPage = () => {
 
             const indianTime = filteredData.map(data => {
                 return {
-                    ...data, // Preserve other properties
-                    booking_start: new Date(data.booking_start).toLocaleString(), // Convert to IST
-                    booking_end: new Date(data.booking_end).toLocaleString(), // Convert to IST
+                    ...data, 
+                    booking_start: new Date(data.booking_start).toLocaleString(), 
+                    booking_end: new Date(data.booking_end).toLocaleString(), 
                     sc: 1
                 };
             });
-            console.log(indianTime)
 
             // Update the state
             setBookingData(indianTime);
@@ -89,7 +88,7 @@ const BookingPage = () => {
                 const data = await response.json();
                 setSlot(data.data);
             } catch (error) {
-                console.error("Error fetching slot details:", error);
+                console.error("Error getting slot details:", error);
             }
         };
 

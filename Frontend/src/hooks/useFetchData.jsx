@@ -7,12 +7,11 @@ const useFetchData = (url) => {
   const [error, setError] = useState(null);
   const { token } = useContext(authContext);
 
-  // Define the fetchData function
+ 
   const fetchData = useCallback(async () => {
     setLoading(true);
-    setError(null); // Reset error state on refetch
+    setError(null); 
     try {
-      console.log(url, "  ", token);
       const res = await fetch(url, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -20,7 +19,6 @@ const useFetchData = (url) => {
       });
 
       const result = await res.json();
-      console.log(result)
 
       if (!res.ok) {
         throw new Error(result.message + " 😠");
@@ -33,14 +31,14 @@ const useFetchData = (url) => {
     } finally {
       setLoading(false);
     }
-  }, [url, token]); // Dependencies for the useCallback hook
+  }, [url, token]); 
 
-  // Use fetchData when the component mounts or URL changes
+ 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
 
-  return { data, loading, error, refetch: fetchData }; // Return refetch as part of the hook's result
+  return { data, loading, error, refetch: fetchData }; 
 };
 
 export default useFetchData;

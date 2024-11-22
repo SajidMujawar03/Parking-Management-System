@@ -2,7 +2,7 @@ import React, {  useEffect, useState } from 'react'
 
 import { Link, useNavigate } from 'react-router-dom'
 import { uploadToCloudinary } from '../../utils/uploadToCloudinary.js'
-// import { BASE_URL } from '../../config.js'
+
 import {toast} from 'react-toastify'
 import HashLoader from "react-spinners/HashLoader.js"
 
@@ -86,13 +86,11 @@ const MyProfile = ({user}) => {
         }
       )
 
-      console.log(res)
 
       
 
       const {message}=await res.json()
    
-      // console.log(res.ok)
       if(!res.ok)
       {
         throw new Error(message)

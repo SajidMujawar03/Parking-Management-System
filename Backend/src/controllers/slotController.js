@@ -124,7 +124,7 @@ export const getAllSlots = async (req, res) => {
 
         return res.status(200).json({slots}); 
     } catch (error) {
-        return res.status(500).json({ message: 'Failed to fetch slots', error: error.message });
+        return res.status(500).json({ message: 'Failed to get slots', error: error.message });
     }
 };
 
