@@ -25,7 +25,7 @@ const Contact = () => {
     };
 
     try {
-      const res = await fetch(`${BASE_URL}/webReview/postReview`, {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/v1/webReview/postReview`, {
         method: 'post',
         headers: {
           "Content-Type": "application/json"

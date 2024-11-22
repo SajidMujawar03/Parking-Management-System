@@ -23,7 +23,7 @@ const MyAccount = () => {
 
     const [tab,setTab]=useState("settings");
 
-    const {data:userData,loading,error}=useFetchData(`${BASE_URL}/user/profile/me`)
+    const {data:userData,loading,error}=useFetchData(`${import.meta.env.VITE_BASE_URL}/api/v1/user/profile/me`)
 
 
     const navigate=useNavigate();
@@ -38,7 +38,7 @@ const MyAccount = () => {
     const handleDelete = async () => {
         try {
             
-            const res = await fetch(`${BASE_URL}/user/${localStorage.getItem("user")._id}`, {
+            const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/v1/user/${localStorage.getItem("user")._id}`, {
                 method: 'DELETE',
                 headers: {
                     Authorization: `Bearer ${token}`  

@@ -1,12 +1,17 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { BASE_URL } from '../config';
+
 import { FaCalendarAlt, FaClock, FaMoneyBillAlt } from 'react-icons/fa';
-import { toast } from 'react-toastify'
+// import { toast } from 'react-toastify'
 import { authContext } from '../context/AuthContext.jsx'
+
+
+
 
 const razorpay_id = import.meta.env.VITE_RAZORPAY_ID;
 const razorpay_key = import.meta.env.RAZORPAY_KEY;
+
+
 
 const BookingPage = () => {
     const { user } = useContext(authContext);
@@ -46,7 +51,7 @@ const BookingPage = () => {
 
     const fetchBookingDetails = async () => {
         try {
-            const response = await fetch(`${BASE_URL}/bookings/booking/${slotId}`);
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/v1/bookings/booking/${slotId}`);
             const res = await response.json();
             const datas = res.data;
 
@@ -84,7 +89,7 @@ const BookingPage = () => {
     useEffect(() => {
         const fetchSlotDetails = async () => {
             try {
-                const response = await fetch(`${BASE_URL}/slot/slot/${slotId}`);
+                const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/v1/slot/slot/${slotId}`);
                 const data = await response.json();
                 setSlot(data.data);
             } catch (error) {
@@ -144,7 +149,7 @@ if (selectedFromDate >= selectedToDate) {
 }
 
 
-            const availabilityResponse = await fetch(`${BASE_URL}/bookings/check-availability`, {
+            const availabilityResponse = await fetch(`${import.meta.env.VITE_BASE_URL}/api/v1/bookings/check-availability`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -168,7 +173,7 @@ if (selectedFromDate >= selectedToDate) {
 
             const totalHours = (selectedToDate - selectedFromDate) / (1.0 * 1000 * 60 * 60);
 
-            const response = await fetch(`${BASE_URL}/bookings/create-order`, {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/v1/bookings/create-order`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -191,7 +196,7 @@ if (selectedFromDate >= selectedToDate) {
                 currency: 'INR',
                 order_id: data.order_id,
                 handler: async function (response) {
-                    const verifyResponse = await fetch(`${BASE_URL}/bookings/verify-payment`, {
+                    const verifyResponse = await fetch(`${import.meta.env.VITE_BASE_URL}/api/v1/bookings/verify-payment`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -207,7 +212,7 @@ if (selectedFromDate >= selectedToDate) {
 
                     if (verificationData.success) {
                         setPaymentStatus('Payment successful!');
-                        await fetch(`${BASE_URL}/bookings/book-slot`, {
+                        await fetch(`${import.meta.env.VITE_BASE_URL}/api/v1/bookings/book-slot`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',

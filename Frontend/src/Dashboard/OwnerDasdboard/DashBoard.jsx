@@ -22,7 +22,7 @@ const DashBoard = () => {
 
     const [tab,setTab]=useState("settings");
 
-    const {data:userData,loading,error}=useFetchData(`${BASE_URL}/owner/profile/me`)
+    const {data:userData,loading,error}=useFetchData(`${import.meta.env.VITE_BASE_URL}/api/v1/owner/profile/me`)
 
 
     const navigate=useNavigate();
@@ -39,7 +39,7 @@ const DashBoard = () => {
     
             // Make DELETE request to the server
            
-            const res = await fetch(`${BASE_URL}/owner/${user._id}`, {
+            const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/v1/owner/${user._id}`, {
                 method: 'DELETE',
                 headers: {
                     Authorization: `Bearer ${token}`  

@@ -103,7 +103,7 @@ export const getSlot=async(req,res)=>{
     const id=req.params.id;
     try {
 
-        // console.log(id)
+        console.log(id)
         const slot=await Slot.findById(id);
         if(slot==null)
             res.status(404).json({success:false,message:"Slot Not Found"});

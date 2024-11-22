@@ -22,7 +22,7 @@ const SlotCard = ({ slot, refetch }) => {
 
   const handleDeleteSlot = async () => {
     try {
-      const response = await fetch(`${BASE_URL}/slot/delete-slot/${_id}`, {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/v1/slot/delete-slot/${_id}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,

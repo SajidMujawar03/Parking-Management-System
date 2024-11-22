@@ -23,7 +23,7 @@ const MyBookings = () => {
   const [location, setLocation] = useState(null);
   const [err, setErr] = useState(null);
 
-  const { data: slots, loading, error, refetch } = useFetchData(`${BASE_URL}/owner/created-slots/${user._id}`);
+  const { data: slots, loading, error, refetch } = useFetchData(`${import.meta.env.VITE_BASE_URL}/api/v1/owner/created-slots/${user._id}`);
 
   const { coords, isGeolocationAvailable, isGeolocationEnabled } = useGeolocated({
     positionOptions: {
@@ -106,7 +106,7 @@ const MyBookings = () => {
       };
 
       // Send POST request to create slot
-      const response = await fetch(`${BASE_URL}/slot/create-slot`, {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/v1/slot/create-slot`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

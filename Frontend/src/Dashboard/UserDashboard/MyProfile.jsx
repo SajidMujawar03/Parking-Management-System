@@ -52,7 +52,7 @@ const MyProfile = ({ user }) => {
     setLoading(true)
 
     try {
-      const res = await fetch(`${BASE_URL}/user/${user._id}`,
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/v1/user/${user._id}`,
         {
           method: 'put',
           headers: {

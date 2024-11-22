@@ -11,7 +11,7 @@ const LocationFinder = () => {
 
     const fetchSlots = async () => {
         try {
-            const response = await fetch(`${BASE_URL}/slot/slots`, {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/v1/slot/slots`, {
                 method: 'get',
                 headers: {
                     "Content-Type": "application/json"
