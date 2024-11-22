@@ -364,41 +364,40 @@ const MyBookings = () => {
 
   return (
     <div>
-      <div className="flex justify-center mb-4 mt-2">
-        <button
-          onClick={() => setView('notExpired')}
-          className={`px-4 py-2 mx-2 ${
-            view === 'notExpired' ? 'bg-green-500 text-white' : 'bg-gray-200'
-          } rounded`}
-        >
-          Not Expired Bookings
-        </button>
-        <button
-          onClick={() => setView('expired')}
-          className={`px-4 py-2 mx-2 ${
-            view === 'expired' ? 'bg-red-500 text-white' : 'bg-gray-200'
-          } rounded`}
-        >
-          Expired Bookings
-        </button>
-      </div>
-
-      
-      {loading ? (
-        <p className="text-center m-2">Loading...</p>
-      ) : error ? (
-        <p className="text-center text-red-500 m-2">{error}</p>
-      ) : view === 'notExpired' ? (
-        <NotExpiredSlots
-          slots={notExpiredSlots}
-          checkBookingStatus={checkBookingStatus}
-          getRemainingTime={getRemainingTime}
-     
-        />
-      ) : (
-        <ExpiredSlots slots={expiredSlots} />
-      )}
+    <div className="flex justify-center mb-4 mt-2">
+      <button
+        onClick={() => setView('notExpired')}
+        className={`px-4 py-2 mx-2 ${
+          view === 'notExpired' ? 'bg-green-500 text-white' : 'bg-gray-200'
+        } rounded`}
+      >
+        Not Expired Bookings
+      </button>
+      <button
+        onClick={() => setView('expired')}
+        className={`px-4 py-2 mx-2 ${
+          view === 'expired' ? 'bg-red-500 text-white' : 'bg-gray-200'
+        } rounded`}
+      >
+        Expired Bookings
+      </button>
     </div>
+  
+    {loading ? (
+      <p className="text-center m-2">Loading...</p>
+    ) : error ? (
+      <p className="text-center text-red-500 m-2">{error}</p>
+    ) : view === 'notExpired' ? (
+      <NotExpiredSlots
+        slots={notExpiredSlots}
+        checkBookingStatus={checkBookingStatus}
+        getRemainingTime={getRemainingTime}
+      />
+    ) : (
+      <ExpiredSlots slots={expiredSlots} />
+    )}
+  </div>
+  
   );
 };
 

@@ -145,133 +145,136 @@ const MyBookings = () => {
 
   return (
     <div className="mt-2">
-      {loading && !error && <Loading />}
-      {error && !loading && <Error errorMessage={error} />}
-      {!loading && !error && (
-        <div>
-          <form onSubmit={handleAddSlot} className="rounded-md border border-orange-100">
-            <div className="flex items-center justify-between m-2 flex-wrap">
-              <div className="flex items-center gap-3 flex-1 min-w-[calc(50%-8px)] m-2 justify-between">
-                <div className='flex justify-center items-center'>
-                  {selectedFile && (
-                    <figure className="w-[60px] h-[60px] rounded-full border-2 border-solid border-orange-500 flex items-center justify-center mr-4">
-                      <img src={previewURL} alt="Preview" className="w-full rounded-full" />
-                    </figure>
-                  )}
-                  <div className="relative w-[130px] h-[50px]">
-                    <label
-                      htmlFor="customFile"
-                      className="absolute top-0 left-0  h-full flex items-center px-[0.75rem] py-[0.375rem] text-[15px] leading-6 overflow-hidden bg-[#ff840046] text-slate-900 font-semibold rounded-lg truncate cursor-pointer z-0"
-                    >
-                      Upload Photo
-                    </label>
-                    <input
-                      type="file"
-                      name="photo"
-                      id="customFile"
-                      accept=".jpg, .png"
-                      onChange={handleFileInputChange}
-                      className="absolute top-0 left-0  h-full opacity-0 cursor-pointer z-99"
-                      required
-                    />
-                  </div>
-                </div>
-
-                <input
-                  type="datetime-local"
-                  name="expiry_date"
-                  value={newSlot.expiry_date}
-                  onChange={handleInputChange}
-                  required
-                  className="m-2 p-2 focus:outline-none border-solid border-b border-orange-400"
-                />
-              </div>
-
-              <input
-                type="text"
-                name="address"
-                value={newSlot.address}
-                onChange={handleInputChange}
-                placeholder="Street Address"
-                required
-                className="h-[50px] w-[100%] text-start p-1 m-2 focus:outline-none border-solid border-b border-orange-400"
-              />
-              <div className="grid md:grid-cols-2 grid-cols-1 w-full gap-2">
-                <input
-                  type="text"
-                  name="city"
-                  value={newSlot.city}
-                  onChange={handleInputChange}
-                  placeholder="City"
-                  required
-                  className="h-[50px] text-start p-1 m-2 focus:outline-none border-solid border-b border-orange-400 "
-                />
-                <input
-                  type="text"
-                  name="taluka"
-                  value={newSlot.taluka}
-                  onChange={handleInputChange}
-                  placeholder="Taluka"
-                  required
-                  className="h-[50px] text-start p-1 m-2 focus:outline-none border-solid border-b border-orange-400 "
-                />
-                <input
-                  type="text"
-                  name="district"
-                  value={newSlot.district}
-                  onChange={handleInputChange}
-                  placeholder="District"
-                  required
-                  className="h-[50px] text-start p-1 m-2 focus:outline-none border-solid border-b border-orange-400 "
-                />
-                <input
-                  type="text"
-                  name="pincode"
-                  value={newSlot.pincode}
-                  onChange={handleInputChange}
-                  placeholder="Pincode"
-                  required
-                  className="h-[50px] text-start p-1 m-2 focus:outline-none border-solid border-b border-orange-400 "
-                />
-              </div>
-
-              <input
-                type="text"
-                name="hourly_price"
-                value={newSlot.hourly_price}
-                onChange={handleInputChange}
-                placeholder="Hourly Price"
-                required
-                className="flex-1 m-2 p-1 focus:outline-none border-solid border-b border-orange-400"
-              />
-              <button
-                type="submit"
-                disabled={isCreating}
-                className="m-2 bg-green-300 w-fit flex items-center justify-between p-2 font-[600] rounded-md text-green-900"
-              >
-                <IoIosAddCircleOutline />
-                Add Slot
-              </button>
-            </div>
-          </form>
-
-          <div>
-            <h4 className="w-[100%] text-[32px] font-[500] text-slate-800 text-center">YOUR SLOTS</h4>
-            {slots.length > 0 ? (
-              slots.map((slot) => (
-                <div key={slot._id} className="w-[100%]">
-                  <SlotCard slot={slot} refetch={refetch} />
-                </div>
-              ))
-            ) : (
-              <h3 className="mt-5 text-center text-orange-500 leading-7 text-[20px] font-semibold">
-                You have not created any slot
-              </h3>
+  {loading && !error && <Loading />}
+  {error && !loading && <Error errorMessage={error} />}
+  {!loading && !error && (
+    <div className="p-4">
+      {/* Add Slot Form */}
+      <form onSubmit={handleAddSlot} className="rounded-md border border-orange-100 p-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {/* File Upload */}
+          <div className="flex items-center">
+            {selectedFile && (
+              <figure className="w-[50px] h-[50px] rounded-full border-2 border-orange-500 mr-4">
+                <img src={previewURL} alt="Preview" className="rounded-full" />
+              </figure>
             )}
+            <label
+              htmlFor="customFile"
+              className="bg-orange-100 px-4 py-2 rounded-md text-slate-900 cursor-pointer"
+            >
+              Upload Photo
+              <input
+                type="file"
+                id="customFile"
+                onChange={handleFileInputChange}
+                className="hidden"
+                required
+              />
+            </label>
           </div>
+
+          {/* Expiry Date */}
+          <input
+            type="datetime-local"
+            name="expiry_date"
+            value={newSlot.expiry_date}
+            onChange={handleInputChange}
+            className="p-2 border border-orange-400 rounded-md w-full"
+            required
+          />
         </div>
+
+        {/* Address Inputs */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+          <input
+            type="text"
+            name="address"
+            placeholder="Street Address"
+            value={newSlot.address}
+            onChange={handleInputChange}
+            className="p-2 border border-orange-400 rounded-md w-full"
+            required
+          />
+          <input
+            type="text"
+            name="city"
+            placeholder="City"
+            value={newSlot.city}
+            onChange={handleInputChange}
+            className="p-2 border border-orange-400 rounded-md w-full"
+            required
+          />
+          <input
+            type="text"
+            name="taluka"
+            placeholder="Taluka"
+            value={newSlot.taluka}
+            onChange={handleInputChange}
+            className="p-2 border border-orange-400 rounded-md w-full"
+            required
+          />
+          <input
+            type="text"
+            name="district"
+            placeholder="District"
+            value={newSlot.district}
+            onChange={handleInputChange}
+            className="p-2 border border-orange-400 rounded-md w-full"
+            required
+          />
+          <input
+            type="text"
+            name="pincode"
+            placeholder="Pincode"
+            value={newSlot.pincode}
+            onChange={handleInputChange}
+            className="p-2 border border-orange-400 rounded-md w-full"
+            required
+          />
+        </div>
+
+        {/* Hourly Price */}
+        <div className="mt-4 flex justify-between items-center">
+          <input
+            type="text"
+            name="hourly_price"
+            placeholder="Hourly Price"
+            value={newSlot.hourly_price}
+            onChange={handleInputChange}
+            className="p-2 border border-orange-400 rounded-md flex-1 mr-4"
+            required
+          />
+          <button
+            type="submit"
+            className="bg-green-400 text-white px-4 py-2 rounded-md"
+          >
+            Add Slot
+          </button>
+        </div>
+      </form>
+
+      <div>
+      <h4 className="w-[100%] text-[32px] font-[500] text-slate-800 text-center">
+        YOUR SLOTS
+      </h4>
+      {slots.length > 0 ? (
+        slots.map((slot) => (
+          <div key={slot._id} className="w-[100%]">
+            <SlotCard slot={slot} refetch={refetch} />
+          </div>
+        ))
+      ) : (
+        <h3 className="mt-5 text-center text-orange-500 leading-7 text-[20px] font-semibold">
+          You have not created any slot
+        </h3>
       )}
     </div>
+    </div>
+  )}
+</div>
+
+     
   );
 };
 

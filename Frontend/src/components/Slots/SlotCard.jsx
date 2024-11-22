@@ -45,27 +45,41 @@ const SlotCard = ({ slot, refetch }) => {
   };
 
   return (
-    <div className="p-2 flex items-center justify-start border-solid border-orange-200 relative">
-      <div className="grid grid-cols-2 gap-5 w-full">
-        <div className="w-[275px] h-[100%]">
-          <img src={photo} className="w-[275px] h-[200px] rounded-[20px]" alt="Slot" />
-        </div>
-        <div>
-          <p className="text-[18px] lg:text-[26px] text-slate-800 font-700">
-            Hourly Price: Rs.{hourly_price}
-          </p>
-          <p>Address: {address}</p>
-          <p>Expiration Date : {date}</p>
-        </div>
-        <button
-          onClick={handleDeleteSlot}
-          className="m-2 w-fit flex items-center justify-between p-2  rounded-md  border-red-500 absolute bottom-0 right-0 border border-solid font-bold text-red-500"
-        >
-          <CiCircleMinus />
-          Delete Slot
-        </button>
+    <div className="p-4 flex flex-col sm:flex-row items-start sm:items-center justify-start border-solid border-orange-200 rounded-lg shadow-md relative">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+      {/* Image Section */}
+      <div className="w-full sm:w-[275px] h-auto flex justify-center">
+        <img 
+          src={photo} 
+          className="w-full max-w-[275px] h-[200px] sm:h-auto rounded-[20px] object-cover" 
+          alt="Slot" 
+        />
+      </div>
+  
+      {/* Details Section */}
+      <div className="flex flex-col justify-between">
+        <p className="text-[16px] sm:text-[18px] lg:text-[26px] text-slate-800 font-semibold mb-2">
+          Hourly Price: Rs.{hourly_price}
+        </p>
+        <p className="text-[14px] sm:text-[16px] text-slate-600 mb-2">
+          Address: {address}
+        </p>
+        <p className="text-[14px] sm:text-[16px] text-slate-600 mb-4">
+          Expiration Date: {date}
+        </p>
       </div>
     </div>
+  
+    {/* Delete Button */}
+    <button
+      onClick={handleDeleteSlot}
+      className="mt-4 sm:mt-0 sm:absolute sm:bottom-4 sm:right-4 w-full sm:w-auto flex items-center justify-center px-4 py-2 rounded-md border border-red-500 font-bold text-red-500"
+    >
+      <CiCircleMinus className="mr-2" />
+      Delete Slot
+    </button>
+  </div>
+  
   );
 };
 

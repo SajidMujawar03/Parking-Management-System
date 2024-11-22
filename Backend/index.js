@@ -17,7 +17,7 @@ import './src/cron.js'
 
 const app=express();
 
-const port=process.env.PORT ;
+const port=process.env.PORT ||3001;
 
 const corsOptions={
     origin:true,//allows any domain to access servers resources which is helpful during development

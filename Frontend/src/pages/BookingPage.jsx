@@ -1,12 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-// import { BASE_URL } from '../config';
+import { BASE_URL } from '../config';
 import { FaCalendarAlt, FaClock, FaMoneyBillAlt } from 'react-icons/fa';
 import { toast } from 'react-toastify'
 import { authContext } from '../context/AuthContext.jsx'
-
-const BASE_URL = import.meta.env.VITE_BASE_URL;
-
 
 const razorpay_id = import.meta.env.VITE_RAZORPAY_ID;
 const razorpay_key = import.meta.env.RAZORPAY_KEY;
@@ -127,7 +124,6 @@ const today = new Date();
 // Set the time to 00:00:00 for today's date to handle the comparison correctly
 selectedFromDate.setHours(fromTime.split(':')[0], fromTime.split(':')[1], 0, 0);
 selectedToDate.setHours(toTime.split(':')[0], toTime.split(':')[1], 0, 0);
-today.setHours(0, 0, 0, 0);
 
 // Get the expiry date of the slot
 const expiry = new Date(slot.expiry_date);
@@ -135,7 +131,7 @@ expiry.setHours(23, 59, 59, 999); // Ensure to compare with the end of the day f
 
 // Validate that the selected date is not earlier than today
 if (selectedFromDate < today || selectedToDate < today) {
-    throw new Error("The selected date cannot be earlier than today.");
+    throw new Error("The selected date cannot be earlier than current time.");
 }
 
 // Check if the selected dates are before the expiry date
@@ -251,7 +247,7 @@ if (selectedFromDate >= selectedToDate) {
         }
     };
     return (
-        <div className="container mt-8 w-full flex  border border-solid justify-around">
+        <div className="container mt-8 w-full flex  border border-solid justify-around lg:flex-nowrap flex-wrap flex-col lg:flex-row">
             {slot ? (
                 <>
                     <div className="grid  w-full rounded-lg">
