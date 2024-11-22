@@ -24,7 +24,7 @@ const port=process.env.PORT ||3001;
 // }
 
 const corsOptions = {
-    origin: process.env.CORS_ORIGIN || 'https://yourfrontend.com', // specify your frontend URL here
+    origin: "*",//process.env.CORS_ORIGIN || 'https://yourfrontend.com', // specify your frontend URL here
     methods: 'GET,POST,PUT,DELETE',
     allowedHeaders: 'Content-Type, Authorization',
 };
