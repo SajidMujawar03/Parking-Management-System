@@ -1,9 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { BASE_URL } from '../config';
+// import { BASE_URL } from '../config';
 import { FaCalendarAlt, FaClock, FaMoneyBillAlt } from 'react-icons/fa';
 import { toast } from 'react-toastify'
 import { authContext } from '../context/AuthContext.jsx'
+
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 
 const razorpay_id = import.meta.env.VITE_RAZORPAY_ID;
 const razorpay_key = import.meta.env.RAZORPAY_KEY;

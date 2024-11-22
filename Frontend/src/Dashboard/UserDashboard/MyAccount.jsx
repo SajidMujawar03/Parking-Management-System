@@ -3,7 +3,7 @@ import { authContext } from '../../context/AuthContext'
 
 
 import useFetchData from "../../hooks/useFetchData.jsx"
-import { BASE_URL } from '../../config'
+// import { BASE_URL } from '../../config'
 
 import MyBookings from './MyBookings'
 import MyProfile from './MyProfile'
@@ -12,6 +12,9 @@ import Error from '../../components/Error/Error.jsx'
 
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
+
+
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 
 const MyAccount = () => {

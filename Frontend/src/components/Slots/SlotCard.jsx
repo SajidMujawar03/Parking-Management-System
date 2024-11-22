@@ -1,23 +1,24 @@
 import React from 'react';
 import { CiCircleMinus } from "react-icons/ci";
-import { BASE_URL } from '../../config.js';
+// import { BASE_URL } from '../../config.js';
 import { toast } from 'react-toastify';
 
-
+// Corrected BASE_URL line
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 const SlotCard = ({ slot, refetch }) => {
-  const { photo, hourly_price, address, _id ,expiry_date} = slot;
+  const { photo, hourly_price, address, _id, expiry_date } = slot;
   
-  const date= expiry_date
-  ? new Date(expiry_date).toLocaleString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-    })
-  : 'No Expiration Date';
+  const date = expiry_date
+    ? new Date(expiry_date).toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+      })
+    : 'No Expiration Date';
 
   const handleDeleteSlot = async () => {
     try {
@@ -28,7 +29,7 @@ const SlotCard = ({ slot, refetch }) => {
         },
       });
 
-      const res=await response.json()
+      const res = await response.json();
 
       if (!response.ok) {
         throw new Error(res.message);

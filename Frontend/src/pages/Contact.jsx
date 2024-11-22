@@ -1,5 +1,8 @@
 import React, { useContext, useState } from 'react';
 import { authContext } from '../context/AuthContext';
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
+
 
 const Contact = () => {
   const { user } = useContext(authContext);

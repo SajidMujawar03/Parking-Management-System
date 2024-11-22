@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { uploadToCloudinary } from '../../utils/uploadToCloudinary.js'
-import { BASE_URL } from '../../config.js'
+// import { BASE_URL } from '../../config.js'
 import { toast } from 'react-toastify'
 import HashLoader from "react-spinners/HashLoader.js"
+
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 
 const MyProfile = ({ user }) => {
 

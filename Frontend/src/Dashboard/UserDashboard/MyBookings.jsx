@@ -283,10 +283,14 @@
 
 
 import React, { useContext, useEffect, useState } from 'react';
-import { BASE_URL } from '../../config.js';
+// import { BASE_URL } from '../../config.js';
 import { authContext } from '../../context/AuthContext.jsx';
 import ExpiredSlots from './ExpiredSlots.jsx';
 import NotExpiredSlots from './NotExpiredSlots.jsx';
+
+
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 
 const MyBookings = () => {
   const { user } = useContext(authContext);

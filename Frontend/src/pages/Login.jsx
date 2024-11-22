@@ -3,7 +3,10 @@ import { Link, useNavigate } from 'react-router-dom'
 import HashLoader from 'react-spinners/HashLoader'
 import { authContext } from '../context/AuthContext'
 import { toast } from 'react-toastify'
-import { BASE_URL } from '../config.js'
+// import { BASE_URL } from '../config.js'
+
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 
 
 const Login = () => {

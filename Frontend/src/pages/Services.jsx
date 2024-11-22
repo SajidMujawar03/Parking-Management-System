@@ -226,12 +226,16 @@
 
 import React, { useContext, useEffect, useState } from 'react';
 import { FaSearch } from "react-icons/fa";
-import { BASE_URL } from '../config';
+// import { BASE_URL } from '../config';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaLocationDot } from "react-icons/fa6";
 import Fuse from 'fuse.js';
 import { authContext } from '../context/AuthContext'
 import { toast } from 'react-toastify';
+
+
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 
 const Services = () => {
     const [slots, setSlots] = useState([]);

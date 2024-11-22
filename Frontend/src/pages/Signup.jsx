@@ -4,7 +4,10 @@ import {toast}  from 'react-toastify'
 
 import { uploadToCloudinary } from '../utils/uploadToCloudinary'
 import HashLoader from "react-spinners/HashLoader.js"
-import { BASE_URL } from '../config.js'
+// import { BASE_URL } from '../config.js'
+
+
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 const Signup = () => {
   const [selectedFile,setSelectedFile]=useState('')

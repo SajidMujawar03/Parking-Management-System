@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useGeolocated } from 'react-geolocated';
 import useFetchData from '../../hooks/useFetchData.jsx';
-import { BASE_URL } from '../../config.js';
+// import { BASE_URL } from '../../config.js';
 import Loading from '../../components/Loader/Loading.jsx';
 import Error from '../../components/Error/Error.jsx';
 import { authContext } from '../../context/AuthContext.jsx';
@@ -10,6 +10,9 @@ import { FaCircleExclamation } from 'react-icons/fa6';
 import { IoIosAddCircleOutline } from 'react-icons/io';
 import SlotCard from '../../components/Slots/SlotCard.jsx';
 import { toast } from 'react-toastify';
+
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 
 const MyBookings = () => {
   const [selectedFile, setSelectedFile] = useState('');
