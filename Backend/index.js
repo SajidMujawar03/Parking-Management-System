@@ -23,14 +23,25 @@ const corsOptions={
     origin:true,//allows any domain to access servers resources which is helpful during development
 }
 
+<<<<<<< HEAD
 // const corsOptions = {
 //     origin: process.env.CORS_ORIGIN || 'https://yourfrontend.com', // specify your frontend URL here
 //     methods: 'GET,POST,PUT,DELETE',
 //     allowedHeaders: 'Content-Type, Authorization',
 // };
+=======
+const corsOptions = {
+    origin: "*",//process.env.CORS_ORIGIN || 'https://yourfrontend.com', // specify your frontend URL here
+    methods: 'GET,POST,PUT,DELETE',
+    allowedHeaders: 'Content-Type, Authorization',
+};
+>>>>>>> 330814e9472e4ce77ede139e3f5ea2d6140f7c74
 
 
 app.get('/',(req,res)=>{
+    res.json({
+        message:"server is running"
+    })
     console.log("API working")
 })
 
