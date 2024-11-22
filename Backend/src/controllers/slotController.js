@@ -8,9 +8,6 @@ export const createSlot = async (req, res) => {
     try {
         const { photo, address, hourly_price, owner,coordinates: { latitude, longitude },expiry_date } = req.body;
 
-        // console.log(req.body)
-
-
         const newSlot = new Slot({
             photo,
             hourly_price,
@@ -23,8 +20,18 @@ export const createSlot = async (req, res) => {
         const user=await Owner.findById(owner);
         if(!user)
         {
+            console.log(req.body)
             return res.status(404).json({success:false, message: 'user not found' });
         }
+
+        
+
+        if (!user.bankAccount || !user.ifscCode) {
+            return res.status(400).json({
+              success: false,
+              message: 'Slot creation is allowed only if the owner has provided bank account and IFSC code.',
+            });
+          }
 
         await newSlot.save();
 

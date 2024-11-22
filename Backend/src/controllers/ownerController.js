@@ -1,47 +1,55 @@
 import Owner from "../models/owner.model.js"
 import bcrypt from "bcryptjs"
 
-export const updateProfile=async (req,res)=>{
-    const id=req.params.id
+
+export const updateProfile = async (req, res) => {
+    const id = req.params.id;
     try {
+        const users = await Owner.findById(id);
         
-        const users = await Owner.findOne({id});
+        
         if (!users) {
             return res.status(404).json({ success: false, message: "User not found" });
         }
 
+        if(!req.body.bankAccount)
+            req.body.bankAccount=users.bankAccount
+        if(!req.body.ifscCode)
+            req.body.ifscCode=users.ifscCode
 
-        if(req.body.password!=null)
-        {
-            const isMatched = await bcrypt.compare(req.body.oldPassword, users.password);
-
-            if (!isMatched) {
-                return res.status(400).json({ success: false, message: "Password did not match" });
+        // Handle password update logic
+        if (req.body.password) {
+            if (!req.body.oldPassword) {
+                return res.status(400).json({ success: false, message: "Old password is required" });
             }
 
-            const salt=await bcrypt.genSalt(10);
-            const hashPassword=await bcrypt.hash(req.body.password,salt);
-            req.body.password=hashPassword;
-        }else
-        {
+            const isMatched = await bcrypt.compare(req.body.oldPassword, users.password);
+            if (!isMatched) {
+                return res.status(400).json({ success: false, message: "Old password did not match" });
+            }
+
+            const salt = await bcrypt.genSalt(10);
+            const hashPassword = await bcrypt.hash(req.body.password, salt);
+            req.body.password = hashPassword;
+        } else {
+            // If password isn't being updated, ensure it isn't overwritten
             delete req.body.password;
         }
 
+        // Remove oldPassword after processing
         delete req.body.oldPassword;
 
+        const user = await Owner.findByIdAndUpdate(id, { $set: req.body }, { new: true }).select("-password").select("-slots");
 
-        const user=await Owner.findByIdAndUpdate(id,{$set:req.body},{new:true}).select("-password").select("-slots");
-       
-        console.log(user)
-        console.log(req.body)
-        res.status(200).json({success:true,message:"Updating Profile...",data:user})
-
+        console.log(user);  // Debugging line, can be removed in production
+        res.status(200).json({ success: true, message: "Profile updated successfully", data: user });
 
     } catch (error) {
-        console.log(error.message)
-        res.status(500).json({success:false,message:"Something went wrong..."})
+        console.log(error);  // Log the complete error to the console
+        res.status(500).json({ success: false, message: error.message });
     }
-}
+};
+
 
 
 

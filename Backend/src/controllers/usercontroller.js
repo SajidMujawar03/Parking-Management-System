@@ -3,32 +3,53 @@
 import User from "../models/user.model.js"
 import bcrypt from "bcryptjs"
 
-export const updateProfile=async (req,res)=>{
-    const id=req.params.id
+export const updateProfile = async (req, res) => {
+    const id = req.params.id;
     try {
-
+        // Find user by ID
+        const user = await User.findById(id);
         
-        if(req.body.password)
-        {
-           
-            const salt=await bcrypt.genSalt(10);
-           
-            const hashPassword=await bcrypt.hash(req.body.password,salt);
-         
-            req.body.password=hashPassword;
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
         }
-      
 
-        
-        const user=await User.findByIdAndUpdate(id,{$set:req.body},{new:true}).select("-password").select("-slots");
+        // Handle password update logic
+        if (req.body.password) {
+            if (!req.body.oldPassword) {
+                return res.status(400).json({ success: false, message: "Old password is required" });
+            }
 
-        res.status(200).json({success:true,message:"Updating Profile...",data:user})
+            const isMatched = await bcrypt.compare(req.body.oldPassword, user.password);
+            if (!isMatched) {
+                return res.status(400).json({ success: false, message: "Old password did not match" });
+            }
 
+            const salt = await bcrypt.genSalt(10);
+            const hashPassword = await bcrypt.hash(req.body.password, salt);
+            req.body.password = hashPassword;
+        } else {
+            // If password isn't being updated, ensure it isn't overwritten
+            delete req.body.password;
+        }
 
+        // Remove oldPassword from the request body after processing
+        delete req.body.oldPassword;
+
+        // Update user profile, excluding password and slots
+        const updatedUser = await User.findByIdAndUpdate(id, { $set: req.body }, { new: true })
+                                      .select("-password")
+                                      .select("-slots");
+
+        res.status(200).json({
+            success: true,
+            message: "Profile updated successfully",
+            data: updatedUser
+        });
     } catch (error) {
-        res.status(500).json({success:false,message:"Something went wrong..."})
+        console.log(error);  // Log the complete error for debugging
+        res.status(500).json({ success: false, message: "Something went wrong", error: error.message });
     }
-}
+};
 
 export const deleteProfile = async (req, res) => {
     try {

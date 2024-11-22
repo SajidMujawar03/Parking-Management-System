@@ -22,7 +22,9 @@ const MyProfile = ({user}) => {
       oldPassword:'',
       password:'',
       photo:null,
-      phone:''
+      phone:'',
+      ifscCode: '', // Added this line
+      bankAccount:""
     }
   )
 
@@ -33,8 +35,9 @@ const MyProfile = ({user}) => {
       password:formData.password||"",
       oldPassword:formData.oldPassword||'',
       photo:user.photo||"",
-      phone:user.phone||""
-      
+      phone:user.phone||"",
+      bankAccount:"",
+      ifscCode:"",
     })
   },[user])
 
@@ -178,9 +181,11 @@ const MyProfile = ({user}) => {
         </select>
       </label>
     </div> */}
+
+<input type="tel"  name="phone" pattern="[0-9]{10}" placeholder="Enter Your Mobile No. Format(0000000000)"value={formData.phone} onChange={handleInputChange} className="w-full  py-3 border-b border-solid border-orange-400 focus:outline-none focus:border-b-orange-600 text-[16px] leading-7 text-slate-900 placeholder:text-slate-600  cursor-pointer" required autoComplete="current-password"/>
     <div className="mb-5 grid grid-cols-2 gap-2">
 
-                        <input type="tel"  name="phone" pattern="[0-9]{10}" placeholder="Enter Your Mobile No. Format(0000000000)"value={formData.phone} onChange={handleInputChange} className="w-full  py-3 border-b border-solid border-orange-400 focus:outline-none focus:border-b-orange-600 text-[16px] leading-7 text-slate-900 placeholder:text-slate-600  cursor-pointer" required autoComplete="current-password"/>
+                        
                         
     <input 
     type="text" 
@@ -190,6 +195,18 @@ const MyProfile = ({user}) => {
     onChange={handleInputChange}
     className="w-full py-3 pr-4 border-b border-solid border-orange-400 focus:outline-none focus:border-b-orange-600 text-[16px] leading-7 text-slate-900 placeholder:text-slate-600 cursor-pointer" 
   />
+
+
+  <input 
+    type="text" 
+    placeholder="Enter IFSC Code" 
+    name="ifscCode" 
+    value={formData.ifscCode || ""} 
+    onChange={handleInputChange}
+    className="w-full py-3 pr-4 border-b border-solid border-orange-400 focus:outline-none focus:border-b-orange-600 text-[16px] leading-7 text-slate-900 placeholder:text-slate-600 cursor-pointer" 
+  />
+
+
                         
     </div>
 

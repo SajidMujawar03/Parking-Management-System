@@ -35,12 +35,12 @@ const ownerSchema=mongoose.Schema({
     ],
     bankAccount:{
         type:String,
-        default:"Yet To be Updated"
+        default:null
     },
-    amount:
+    ifscCode:
     {
-        type:Number,
-        default:0
+        type:String,
+        default:null
     }
 
 
