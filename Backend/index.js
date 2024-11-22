@@ -19,9 +19,15 @@ const app=express();
 
 const port=process.env.PORT ||3001;
 
-const corsOptions={
-    origin:true,//allows any domain to access servers resources which is helpful during development
-}
+// const corsOptions={
+//     origin:true,//allows any domain to access servers resources which is helpful during development
+// }
+
+const corsOptions = {
+    origin: process.env.CORS_ORIGIN || 'https://yourfrontend.com', // specify your frontend URL here
+    methods: 'GET,POST,PUT,DELETE',
+    allowedHeaders: 'Content-Type, Authorization',
+};
 
 
 app.get('/',(req,res)=>{
