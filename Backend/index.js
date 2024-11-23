@@ -20,30 +20,11 @@ const app=express();
 const port=process.env.PORT ||3001;
 
 const corsOptions={
-    origin:process.env.VERCEL_URL
+    origin:true
 }
 
 
-// const corsOptions = {
-//     origin: "*",//process.env.CORS_ORIGIN || 'https://yourfrontend.com', // specify your frontend URL here
-//     methods: 'GET,POST,PUT,DELETE',
-//     allowedHeaders: 'Content-Type, Authorization',
-// };
-
-
-
-
-
-// app.get('/',(req,res)=>{
-//     res.json({
-//         message:"server is running"
-//     })
-//     console.log("API working")
-// })
-
-
-
-mongoose.set({"strictQuery":true})
+// mongoose.set({"strictQuery":true})
 
 
 app.use(cookiePraser())
